@@ -1,14 +1,15 @@
-const vehicleModel = require('../models/vehicle-model');
+const historyModel = require('../models/payment-history-model');
+const responseHelper = require('../helpers/sendResponse');
 
-const getVehicles = (req, res) => {
+const getPaymentHistory = (req, res) => {
     const { body } = req;
-    vehicleModel
-        .getVehicles(body)
+    historyModel
+        .getPaymentHistory(body)
         .then(({ status, result }) => {
             if (status == 404)
                 return res
                     .status(status)
-                    .json({ msg: "data kosong", result });
+                    .json({ msg: "payment kosong", result });
             res.status(status).json({ result });
         })
         .catch(({ status, err }) => {
@@ -16,10 +17,10 @@ const getVehicles = (req, res) => {
         });
 };
 
-const postNewVehicles = (req, res) => {
+const postNewHistory = (req, res) => {
     const { body } = req;
-    vehicleModel
-        .postNewVehicles(body)
+    historyModel
+        .postNewHistory(body)
         .then(({ status, result }) => {
             res.status(status).json({
                 msg: 'Success',
@@ -34,20 +35,21 @@ const postNewVehicles = (req, res) => {
         });
 };
 
-const getVehicleById = (req, res) => {
-    vehicleModel.getVehicleById(req.params.id, (err, result) => {
+const getHistoryById = (req, res) => {
+    historyModel.getHistoryById(req.params.id, (err, result) => {
         if (err)
             res.send(err);
         res.json(result);
     });
 };
 
-const deleteVehicle = (req, res) => {
-    vehicleModel.deleteVehicle(req.params.id, (err, result) => {
+const deleteHistory = (req, res) => {
+    historyModel.deleteHistory(req.params.id, (err, History) => {
         if (err)
             res.send(err);
         res.json({ error: false, message: 'successfully deleted' });
     });
 };
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle };
+
+module.exports = { getPaymentHistory, postNewHistory, getHistoryById, deleteHistory };

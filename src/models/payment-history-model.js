@@ -1,8 +1,8 @@
 const dbConn = require('../config/db');
 
-const getVehicles = () => {
+const getPaymentHistory = () => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM vehicles';
+        const sqlQuery = `SELECT * FROM payment_history`;
         dbConn.query(sqlQuery, (err, result) => {
             if (err) return reject({ status: 500, err });
             if (result.length == 0) return resolve({ status: 404, result });
@@ -11,9 +11,9 @@ const getVehicles = () => {
     });
 };
 
-const postNewVehicles = (body) => {
+const postNewHistory = (body) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = `INSERT INTO vehicles SET?`;
+        const sqlQuery = `INSERT INTO payment_history SET?`;
         dbConn.query(sqlQuery, body, (err, result) => {
             if (err) return reject({ status: 500, err });
             resolve({
@@ -24,8 +24,8 @@ const postNewVehicles = (body) => {
     });
 };
 
-const getVehicleById = (id, result) => {
-    dbConn.query(`SELECT * FROM Vehicles WHERE id =?`, id, (err, res) => {
+const getHistoryById = (id, result) => {
+    dbConn.query(`SELECT * FROM payment_history WHERE id =?`, id, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -35,8 +35,8 @@ const getVehicleById = (id, result) => {
     });
 }
 
-const deleteVehicle = (id, result) => {
-    dbConn.query("DELETE FROM Vehicles WHERE id = ?", [id], (err, res) => {
+const deleteHistory = (id, result) => {
+    dbConn.query("DELETE FROM payment_history WHERE id = ?", [id], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -46,4 +46,4 @@ const deleteVehicle = (id, result) => {
     });
 };
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle };
+module.exports = { getPaymentHistory, postNewHistory, getHistoryById, deleteHistory };

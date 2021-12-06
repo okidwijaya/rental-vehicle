@@ -8,4 +8,8 @@ vehicleRouter.get('/', useController.getVehicles);
 
 vehicleRouter.post('/', useController.postNewVehicles);
 
+vehicleRouter.get('/:id', useController.getVehicleById);
+
+vehicleRouter.delete('/:id', useController.deleteVehicle);
+
 module.exports = vehicleRouter;
