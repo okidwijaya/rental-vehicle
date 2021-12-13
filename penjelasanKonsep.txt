@@ -1,0 +1,26 @@
+Jelaskan dengan bahasa kalian sendiri apa itu dan konsep tentang:
+Node.js
+Menurut saya nodejs membantu javascript dalam menjalankan backend server
+dengan menggunakan local server yang memudahkan untuk development.
+dengan kata lain nodejs membantu dalam menjalakan web server tanpa perlu server tmbhan
+node js sendiri juga sangat membantu dengan banyak package yang disediakan
+dengan nodejs, javascript sekarang dapat dijalankan diluar browser
+
+Express
+Express adalah nodejs framework yang menawarkan fitur seperti 
+routing dan terdapat module mmorgan untuk membantu mencatat tiap request ke server
+Fungsionalitas yang diberikan oleh ExpressJS di bantu oleh yang namanya middleware, 
+middleware yaitu fungsi asinkron yang bisa mengubah request dan respon di server.
+express sendiri membantu dalam pengoprasian create update delete dengan menyesuaikan 
+routing code untuk kemudahan dalam membaca program.
+
+MySQL
+mysql adalah sebuah perangkat lunak untuk memenejemen data, meyimpan data.
+mysql membantu dalam memasukan data, seleksi data dan pengoprasian pada data.
+
+API
+API atau Application Programming Interface berarti antarmuka pemrograman aplikasi. 
+Api adalah interface digunakan untuk menghubungkan antara dua platform,
+ contohnya database dan webserver untuk menampilkan data. menurut saya API memiliki 
+ sekumpulan method atau url endpoint untuk mengembangkan aplikasi atau web
+	

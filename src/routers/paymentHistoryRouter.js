@@ -1,10 +1,12 @@
 const express = require('express');
 
-const useController = require('../controllers/payment-history-controller');
+const useController = require('../controllers/paymentHistoryController');
 
 const historyRouter = express.Router();
 
-historyRouter.get('/', useController.getPaymentHistory);
+historyRouter.get('/', useController.getPaymentHistory); //Rating
+
+historyRouter.get('/search', useController.getHistoryuser);
 
 historyRouter.post('/', useController.postNewHistory);
 
