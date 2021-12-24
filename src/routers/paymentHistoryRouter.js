@@ -14,6 +14,8 @@ historyRouter.get('/:id', useController.getHistoryById);
 
 historyRouter.delete('/:id', useController.deleteHistory);
 
+historyRouter.put('/', useController.updatePaymentHistory);
+
 module.exports = historyRouter;
 
 // getHistoryById, deleteHistory

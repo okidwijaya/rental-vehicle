@@ -12,6 +12,8 @@ userRouter.get('/:id', useController.getUserById);
 
 userRouter.delete('/:id', useController.deleteUser);
 
+userRouter.put('/', useController.updatedPutUser);
+
 userRouter.patch('/:id', useController.userUpdate);
 
 module.exports = userRouter;

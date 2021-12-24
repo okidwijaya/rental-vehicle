@@ -87,4 +87,22 @@ const getHistoryuser = (req, res) => {
         });
 };
 
-module.exports = { getPaymentHistory, postNewHistory, getHistoryById, deleteHistory, getHistoryuser };
+const updatePaymentHistory = (req, res) => {
+    const { body } = req;
+    const id = body.id;
+    historyModel
+        .updatePaymentHistory(id, body)
+        .then(({ status, result }) => {
+            res.status(status).json({
+                msg: 'Success',
+                result: {
+                    result,
+                },
+            });
+        })
+        .catch(({ status, err }) => {
+            res.status(status).json({ msg: "Terjadi Error", err });
+        });
+};
+
+module.exports = { getPaymentHistory, postNewHistory, getHistoryById, deleteHistory, getHistoryuser, updatePaymentHistory };

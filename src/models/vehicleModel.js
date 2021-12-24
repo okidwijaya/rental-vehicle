@@ -58,20 +58,32 @@ const getVehiclesName = (keyword) => {
     });
 };
 
+const updateVehicle = (id, body) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `UPDATE vehicles SET ? WHERE id = ?`;
+        dbConn.query(sqlQuery, [body, id], (err, result) => {
+            if (err) return reject({ status: 500, err });
+            if (result.length == 0) return resolve({ status: 404, result });
+            resolve({ status: 200, result });
+        });
+    });
+};
+
 const getOrder = (query) => {
     return new Promise((resolve, reject) => {
-        let sqlQuery = `SELECT v.name AS "Name", v.type AS "Type" FROM vehicles v`;
+        let sqlQuery = `SELECT v.name AS "Name", v.type AS "Type", v.city AS "City" FROM vehicles v`;
         const statement = [];
         const order = query.order;
         let orderBy = "";
         if (query.by && query.by.toLowerCase() == "name") orderBy = "v.name";
         if (query.by && query.by.toLowerCase() == "type") orderBy = "v.type";
+        if (query.by && query.by.toLowerCase() == "City") orderBy = "v.city";
         if (order && orderBy) {
             sqlQuery += ` ORDER BY ? ?`;
             statement.push(mysql.raw(orderBy), mysql.raw(order));
         }
 
-        const countQuery = `select count(*) as "count" from users`;
+        const countQuery = `SELECT COUNT(*) AS "count" FROM users`;
         dbConn.query(countQuery, (err, result) => {
             if (err) return reject({ status: 500, err });
             const page = parseInt(query.page);
@@ -100,4 +112,4 @@ const getOrder = (query) => {
 };
 
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder };
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle };

@@ -69,6 +69,24 @@ const deleteUser = (req, res) => {
         });
 };
 
+const updatedPutUser = (req, res) => {
+    const { body } = req;
+    const id = body.id;
+    userModel
+        .updatedPutUser(id, body)
+        .then(({ status, result }) => {
+            res.status(status).json({
+                msg: 'Success',
+                result: {
+                    result,
+                },
+            });
+        })
+        .catch(({ status, err }) => {
+            res.status(status).json({ msg: "Terjadi Error", err });
+        });
+};
+
 const userUpdate = (req, res) => {
     const { id } = req.params;
     const { nama } = req;
@@ -78,7 +96,7 @@ const userUpdate = (req, res) => {
             if (status == 404)
                 return res
                     .status(status)
-                    .json({ msg: "Tidak Ditemukan", result });
+                    .json({ msg: "error", result });
             res.status(status).json({ result });
         })
         .catch(({ status, err }) => {
@@ -112,4 +130,4 @@ const userUpdate = (req, res) => {
 //         });
 // };
 
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, userUpdate }; //, patchUser
+module.exports = { getUsers, postNewUser, deleteUser, getUserById, userUpdate, updatedPutUser }; //, patchUser

@@ -102,6 +102,24 @@ const getOrder = (req, res) => {
         });
 };
 
+const updateVehicle = (req, res) => {
+    const { body } = req;
+    const id = body.id;
+    vehicleModel
+        .updateVehicle(id, body)
+        .then(({ status, result }) => {
+            res.status(status).json({
+                msg: 'Success',
+                result: {
+                    result,
+                },
+            });
+        })
+        .catch(({ status, err }) => {
+            res.status(status).json({ msg: "Terjadi Error", err });
+        });
+};
 
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder };
+
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle };

@@ -58,4 +58,17 @@ const getHistoryuser = (keyword) => {
     });
 };
 
-module.exports = { getPaymentHistory, postNewHistory, getHistoryById, deleteHistory, getHistoryuser };
+const updatePaymentHistory = (id, body) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `UPDATE payment_history 
+        SET ? 
+        WHERE id = ?`;
+        dbConn.query(sqlQuery, [body, id], (err, result) => {
+            if (err) return reject({ status: 500, err });
+            if (result.length == 0) return resolve({ status: 404, result });
+            resolve({ status: 200, result });
+        });
+    });
+};
+
+module.exports = { getPaymentHistory, postNewHistory, getHistoryById, deleteHistory, getHistoryuser, updatePaymentHistory };

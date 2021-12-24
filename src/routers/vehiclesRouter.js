@@ -15,6 +15,8 @@ vehicleRouter.get('/byOrder', useController.getOrder);
 
 vehicleRouter.get('/:id', useController.getVehicleById);
 
+vehicleRouter.put('/', useController.updateVehicle);
+
 vehicleRouter.delete('/:id', useController.deleteVehicle);
 
 module.exports = vehicleRouter;

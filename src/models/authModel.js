@@ -13,7 +13,7 @@ const createNewUser = (body) => {
                     password: hashedPassword,
                 };
                 dbConn.query(sqlQuery, [newBody], (err, result) => {
-                    if (err) return reject({ status: 500, err });
+                    if (err) return reject({ status: 500, err: "email exist" });
                     resolve({ status: 201, result });
                 });
             })
@@ -21,33 +21,41 @@ const createNewUser = (body) => {
                 reject({ status: 500, err });
             });
     });
+
 };
 
 const userLogIn = (body) => {
     return new Promise((resolve, reject) => {
         const { email_address, password } = body;
-        const sqlQuery = `SELECT * FROM users WHERE ? AND ?`;
-        dbConn.query(sqlQuery, [{ email_address }, { password }], (err, result) => {
+        const sqlQuery = `SELECT * FROM users WHERE ?`; //AND ?
+        dbConn.query(sqlQuery, { email_address }, (err, result) => { //, { password }]
+
             if (err) return reject({ status: 500, err });
             if (result.length == 0)
                 return reject({ status: 401, err: "Wrong Email/Password" });
-            const payload = {
-                id: result[0].id,
-                email_address: result[0].email_address,
-            };
-            const jwtOptions = {
-                expiresIn: "5m",
-                issuer: process.env.ISSUER,
-            }
-            jwt.sign(payload, process.env.SECRET_KEY, jwtOptions, (err, token) => {
+
+            bcrypt.compare(password, result[0].password, function(err) {
                 if (err) return reject({ status: 500, err });
-                resolve({
-                    status: 200,
-                    result: {
-                        token,
-                    },
+                const payload = {
+                    id: result[0].id,
+                    email_address: result[0].email_address,
+                };
+                const jwtOptions = {
+                    expiresIn: "5m",
+                    issuer: process.env.ISSUER,
+                }
+                jwt.sign(payload, process.env.SECRET_KEY, jwtOptions, (err, token) => {
+                    if (err) return reject({ status: 500, err });
+                    resolve({
+                        status: 200,
+                        result: {
+                            token,
+                            payload,
+                        },
+                    });
                 });
             });
+
         });
     });
 };
