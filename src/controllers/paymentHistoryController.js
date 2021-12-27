@@ -1,19 +1,15 @@
 const historyModel = require('../models/paymentHistoryModel');
-// const responseHelper = require('../helpers/sendResponse');
+const responseHelper = require('../helpers/sendResponse');
 
 const getPaymentHistory = (req, res) => {
     const { body } = req;
     historyModel
         .getPaymentHistory(body)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "payment kosong", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -41,14 +37,10 @@ const getHistoryById = (req, res) => {
     historyModel
         .getHistoryById(historyId)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "Kelas Tidak Ditemukan", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -58,14 +50,10 @@ const deleteHistory = (req, res) => {
     historyModel
         .deleteHistory(historyId)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "Kelas Tidak Ditemukan", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -76,14 +64,10 @@ const getHistoryuser = (req, res) => {
     historyModel
         .getHistoryuser(keyword)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "Kelas Tidak Ditemukan", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -93,15 +77,10 @@ const updatePaymentHistory = (req, res) => {
     historyModel
         .updatePaymentHistory(id, body)
         .then(({ status, result }) => {
-            res.status(status).json({
-                msg: 'Success',
-                result: {
-                    result,
-                },
-            });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 

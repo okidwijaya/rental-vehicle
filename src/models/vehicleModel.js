@@ -96,10 +96,8 @@ const getOrder = (query) => {
             }
 
             const meta = {
-                next: page == Math.ceil(count / limit) ?
-                    null : `/vehicles?by=id&order=asc&page=${page + 1}&limit=3`,
-                prev: page == 1 ?
-                    null : `/vehicles?by=id&order=asc&page=${page - 1}&limit=3`,
+                next: page == Math.ceil(count / limit) ? null : `/vehicles?by=id&order=asc&page=${page + 1}&limit=3`,
+                prev: page == 1 ? null : `/vehicles?by=id&order=asc&page=${page - 1}&limit=3`,
                 count,
             };
 
@@ -111,5 +109,19 @@ const getOrder = (query) => {
     });
 };
 
+// upload image
+const postVehicleImage = (id, body) => { //upload.single('image')
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `UPDATE vehicles SET ? WHERE id = ?`;
+        dbConn.query(sqlQuery, [body, id], (err, result) => {
+            if (err) return reject({ status: 500, err });
+            resolve({
+                status: 201,
+                result
+            });
+        });
+    });
+};
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle };
+
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, postVehicleImage };

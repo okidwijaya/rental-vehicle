@@ -6,14 +6,10 @@ const getUsers = (req, res) => {
     userModel
         .getUsers(body)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "user kosong", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -41,14 +37,10 @@ const getUserById = (req, res) => {
     userModel
         .getUserById(userId)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "Kelas Tidak Ditemukan", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -58,14 +50,10 @@ const deleteUser = (req, res) => {
     userModel
         .deleteUser(userId)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "Kelas Tidak Ditemukan", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -75,15 +63,10 @@ const updatedPutUser = (req, res) => {
     userModel
         .updatedPutUser(id, body)
         .then(({ status, result }) => {
-            res.status(status).json({
-                msg: 'Success',
-                result: {
-                    result,
-                },
-            });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -93,41 +76,32 @@ const userUpdate = (req, res) => {
     userModel
         .userUpdate(id, nama)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "error", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
-// .getUserByName(name.toLocaleLowerCase())
+const patchUser = (req, res) => {
+    const { body } = req;
+    const id = body.id;
+    userModel
+        .patchUser(body, id)
+        .then(({ status, result }) => {
+            res.status(status).json({
+                msg: 'Success',
+                result: {
+                    ...body,
+                    url: req.file,
+                    id: result.insertId,
+                },
+            });
+        })
+        .catch(({ status, err }) => {
+            res.status(status).json({ msg: 'terjadi error', err });
+        });
+};
 
 
-// const patchUser = (req, res) => {
-//     const { body } = req;
-//     const userId = body.id;
-//     userModel
-//         .patchUser(userId, body)
-//         .then(({ status, result }) => {
-//             if (status == 404)
-//                 return res
-//                     .status(status)
-//                     .json({ msg: "User tidak ditemukan", result: [] });
-//             res.status(status).json({
-//                 msg: "Data updated successfully",
-//                 result: {
-//                     ...body,
-//                     id: result.insertId,
-//                 },
-//             });
-//         })
-//         .catch(({ status, err }) => {
-//             res.status(status).json({ msg: "Terjadi Error", err });
-//         });
-// };
-
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, userUpdate, updatedPutUser }; //, patchUser
+module.exports = { getUsers, postNewUser, deleteUser, getUserById, userUpdate, updatedPutUser, patchUser }; //, patchUser

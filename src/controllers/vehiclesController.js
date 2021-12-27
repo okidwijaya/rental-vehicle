@@ -6,14 +6,10 @@ const getVehicles = (req, res) => {
     vehicleModel
         .getVehicles(body)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "data not found", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -44,14 +40,10 @@ const getVehicleById = (req, res) => {
     vehicleModel
         .getVehicleById(vehicleId)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "Kelas Tidak Ditemukan", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -61,14 +53,10 @@ const deleteVehicle = (req, res) => {
     vehicleModel
         .deleteVehicle(vehicleId)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "Kelas Tidak Ditemukan", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -79,14 +67,10 @@ const getVehiclesName = (req, res) => {
     vehicleModel
         .getVehiclesName(keyword)
         .then(({ status, result }) => {
-            if (status == 404)
-                return res
-                    .status(status)
-                    .json({ msg: "Kelas Tidak Ditemukan", result });
-            res.status(status).json({ result });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
         });
 };
 
@@ -108,18 +92,28 @@ const updateVehicle = (req, res) => {
     vehicleModel
         .updateVehicle(id, body)
         .then(({ status, result }) => {
-            res.status(status).json({
-                msg: 'Success',
-                result: {
-                    result,
-                },
-            });
+            responseHelper.success(res, status, result);
         })
         .catch(({ status, err }) => {
-            res.status(status).json({ msg: "Terjadi Error", err });
+            responseHelper.error(res, status, err);
+        });
+};
+
+const postVehicleImage = (req, res) => {
+    const { body } = req;
+    const id = body.id;
+    vehicleModel
+        .postVehicleImage(id, body)
+        .then(({ status, result }) => {
+            responseHelper.success(res, status, result);
+        })
+        .catch(({ status, err }) => {
+            responseHelper.error(res, status, err);
         });
 };
 
 
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle };
+
+
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, postVehicleImage };

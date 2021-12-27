@@ -59,46 +59,14 @@ const updatedPutUser = (id, body) => {
         });
     });
 };
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedPutUser }; //, patchUser,  userUpdate
 
-// const userUpdate = (name, id) => {
-//     return new Promise((resolve, reject) => {
-//         const sqlQuery = `
-//           UPDATE users SET name = "${name}"  WHERE id = ${id}`;
-//         dbConn.query(sqlQuery, [name, id], (err, result) => {
-//             if (err) return reject({ status: 500, err });
-//             resolve({ status: 200, result });
-//         });
-//     });
-// };
-
-// const userUpdate = (id, body) => {
-//     return new Promise((resolve, reject) => {
-//         const sqlQuery = ` UPDATE users SET ?  WHERE id = ${id}`;
-//         dbConn.query(sqlQuery, [id, body], (err, result) => {
-//             if (err) return reject({ status: 500, err });
-//             resolve({ status: 200, result });
-//         });
-//     });
-// };
-
-// const updatedPutUser = () => {
-//     return new Promise((resolve, reject) => {
-//         const data = {...req.body };
-//         const querySearch = `SELECT FROM users WHERE id = ?`;
-//         const queryUpdate = `UPDATE users SET ? WHERE id = ?`;
-//         dbConn.query(querySearch, req.params.id, (err, rows) => {
-//             if (err) {
-//                 return res.status(500).json({ message: 'Something wrong', error: err });
-//             }
-//             if (rows.length) {
-//                 dbConn.query(queryUpdate, [data, req.params.id], (err, result) => {
-//                     if (err) return reject({ status: 500, err });
-//                     resolve({ status: 200, result });
-//                 });
-//             } else {
-//                 return res.status(404).json({ message: 'Data not found', error });
-//             }
-//         });
-//     });
-// }
+const patchUser = (body, id) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `UPDATE users SET ? WHERE id = ?`;
+        dbConn.query(sqlQuery, [body, id], (err, result) => {
+            if (err) return reject({ status: 500, err });
+            resolve({ status: 200, result });
+        });
+    });
+};
+module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedPutUser, patchUser }; //, patchUser,  userUpdate
