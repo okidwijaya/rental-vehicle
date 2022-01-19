@@ -1,26 +1,26 @@
-const express = require('express');
-const multer = require('multer');
+const express = require("express");
+const multer = require("multer");
 
-const useController = require('../controllers/vehiclesController');
-const authorize = require('../middlewares/authorize');
-const upload = require('../middlewares/upload');
+const useController = require("../controllers/vehiclesController");
+const authorize = require("../middlewares/authorize");
+const upload = require("../middlewares/upload");
 
 const vehicleRouter = express.Router();
 
-vehicleRouter.get('/', useController.getVehicles);
+vehicleRouter.get("/", useController.getVehicles);
 
-vehicleRouter.get('/search', useController.getVehiclesName);
+vehicleRouter.get("/all", useController.getVehiclesLimit);
 
-vehicleRouter.post('/', authorize.roleTokenAuth, useController.postNewVehicles);
+vehicleRouter.get("/search", useController.getVehiclesName);
 
-vehicleRouter.get('/byOrder', useController.getOrder);
+vehicleRouter.get("/byOrder", useController.getOrder);
 
-vehicleRouter.get('/:id', useController.getVehicleById);
+vehicleRouter.get("/:id", useController.getVehicleById);
 
-vehicleRouter.put('/', useController.updateVehicle);
+vehicleRouter.post("/", authorize.roleTokenAuth, useController.postNewVehicles);
 
-vehicleRouter.delete('/:id', useController.deleteVehicle);
+vehicleRouter.delete("/:id", useController.deleteVehicle);
 
-vehicleRouter.put('/uploadImage', upload.single('image_path'), useController.postVehicleImage);
+vehicleRouter.patch("/", useController.updateVehicle);
 
 module.exports = vehicleRouter;

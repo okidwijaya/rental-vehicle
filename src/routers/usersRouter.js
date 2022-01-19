@@ -13,9 +13,9 @@ userRouter.get('/:id', useController.getUserById);
 
 userRouter.delete('/:id', useController.deleteUser);
 
-userRouter.put('/', useController.updatedPutUser);
+userRouter.patch('/', useController.updatedUser);
 
-userRouter.patch('/userPatch', upload.single('image_path'), useController.patchUser);
+// userRouter.patch('/userPatch', upload.single('image_path'), useController.patchUser);
 
 module.exports = userRouter;
 

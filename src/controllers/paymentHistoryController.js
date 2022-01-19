@@ -1,6 +1,18 @@
 const historyModel = require('../models/paymentHistoryModel');
 const responseHelper = require('../helpers/sendResponse');
 
+const getAllPaymentHistory = (req, res) => {
+    const { body } = req;
+    historyModel
+        .getAllPaymentHistory(body)
+        .then(({ status, result }) => {
+            responseHelper.success(res, status, result);
+        })
+        .catch(({ status, err }) => {
+            responseHelper.error(res, status, err);
+        });
+};
+
 const getPaymentHistory = (req, res) => {
     const { body } = req;
     historyModel
@@ -84,4 +96,4 @@ const updatePaymentHistory = (req, res) => {
         });
 };
 
-module.exports = { getPaymentHistory, postNewHistory, getHistoryById, deleteHistory, getHistoryuser, updatePaymentHistory };
+module.exports = {getAllPaymentHistory, getPaymentHistory, postNewHistory, getHistoryById, deleteHistory, getHistoryuser, updatePaymentHistory };

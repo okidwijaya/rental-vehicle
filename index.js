@@ -13,8 +13,8 @@ server.listen(port, () => {
 });
 
 const corsOptions = {
-    origin: "*",
-    allowedHeaders: "x-access-token",
+    origin: ["http://localhost:3000","https://arkarentaldeploy.netlify.app"],
+    allowedHeaders:[ "x-access-token", "content-type"],
     method: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
 };
 
@@ -22,7 +22,8 @@ server.use(cors(corsOptions));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 server.use(logger);
-server.use(express.static('pictures/image'));
+server.use(express.static('/pictures/image'));
+
 // server.options("/*", (req, res) => {
 //   const corsHeader = {
 //     "Access-Control-Allow-Origin": "http://localhost:3000",

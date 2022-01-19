@@ -3,7 +3,7 @@ const mysql = require('mysql');
 
 const getVehicles = () => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM vehicles ORDER BY id DESC';
+        const sqlQuery = 'SELECT * FROM vehicles'; //DESC
         dbConn.query(sqlQuery, (err, result) => {
             if (err) return reject({ status: 500, err });
             if (result.length == 0) return resolve({ status: 404, result });
@@ -11,6 +11,18 @@ const getVehicles = () => {
         });
     });
 };
+
+const getVehiclesLimit = () => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = 'SELECT * FROM vehicles ORDER BY id ASC LIMIT 4'; //DESC
+        dbConn.query(sqlQuery, (err, result) => {
+            if (err) return reject({ status: 500, err });
+            if (result.length == 0) return resolve({ status: 404, result });
+            resolve({ status: 200, result });
+        });
+    });
+};
+
 
 const postNewVehicles = (body) => {
     return new Promise((resolve, reject) => {
@@ -58,17 +70,6 @@ const getVehiclesName = (keyword) => {
     });
 };
 
-const updateVehicle = (id, body) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = `UPDATE vehicles SET ? WHERE id = ?`;
-        dbConn.query(sqlQuery, [body, id], (err, result) => {
-            if (err) return reject({ status: 500, err });
-            if (result.length == 0) return resolve({ status: 404, result });
-            resolve({ status: 200, result });
-        });
-    });
-};
-
 const getOrder = (query) => {
     return new Promise((resolve, reject) => {
         let sqlQuery = `SELECT v.name AS "Name", v.type AS "Type", v.city AS "City" FROM vehicles v`;
@@ -109,19 +110,16 @@ const getOrder = (query) => {
     });
 };
 
-// upload image
-const postVehicleImage = (id, body) => { //upload.single('image')
+
+const updateVehicle = (id, body) => {
     return new Promise((resolve, reject) => {
         const sqlQuery = `UPDATE vehicles SET ? WHERE id = ?`;
         dbConn.query(sqlQuery, [body, id], (err, result) => {
             if (err) return reject({ status: 500, err });
-            resolve({
-                status: 201,
-                result
-            });
+            if (result.length == 0) return resolve({ status: 404, result });
+            resolve({ status: 200, result });
         });
     });
 };
 
-
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, postVehicleImage };
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle,  getVehiclesLimit }; //, getVehiclesLimit

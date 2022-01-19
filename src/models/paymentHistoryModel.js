@@ -1,8 +1,21 @@
 const dbConn = require('../config/db');
 
+const getAllPaymentHistory = () => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `SELECT * FROM payment_history`;
+        //const sqlQuery = `SELECT * FROM payment_history ORDER BY id DESC`;
+        dbConn.query(sqlQuery, (err, result) => {
+            if (err) return reject({ status: 500, err });
+            if (result.length == 0) return resolve({ status: 404, result });
+            resolve({ status: 200, result });
+        });
+    });
+};
+
+//popoiular by rate
 const getPaymentHistory = () => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = `SELECT p.rating, p.vehicle_name AS "History" FROM payment_history p GROUP BY p.vehicle_name ORDER BY COUNT(rating) DESC`;
+        const sqlQuery = `SELECT p.rating, p.location, p.destination, p.vehicle_name AS "name" FROM payment_history p GROUP BY p.vehicle_name ORDER BY COUNT(rating) DESC LIMIT 4`;
         //const sqlQuery = `SELECT * FROM payment_history ORDER BY id DESC`;
         dbConn.query(sqlQuery, (err, result) => {
             if (err) return reject({ status: 500, err });
@@ -60,9 +73,7 @@ const getHistoryuser = (keyword) => {
 
 const updatePaymentHistory = (id, body) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = `UPDATE payment_history 
-        SET ? 
-        WHERE id = ?`;
+        const sqlQuery = `UPDATE payment_history SET ? WHERE id = ?`;
         dbConn.query(sqlQuery, [body, id], (err, result) => {
             if (err) return reject({ status: 500, err });
             if (result.length == 0) return resolve({ status: 404, result });
@@ -71,4 +82,4 @@ const updatePaymentHistory = (id, body) => {
     });
 };
 
-module.exports = { getPaymentHistory, postNewHistory, getHistoryById, deleteHistory, getHistoryuser, updatePaymentHistory };
+module.exports = {getAllPaymentHistory, getPaymentHistory, postNewHistory, getHistoryById, deleteHistory, getHistoryuser, updatePaymentHistory };

@@ -13,6 +13,20 @@ const getVehicles = (req, res) => {
         });
 };
 
+const getVehiclesLimit = (req, res) => {
+    const { body } = req;
+    vehicleModel
+        .getVehiclesLimit(body)
+        .then(({ status, result }) => {
+            responseHelper.success(res, status, result);
+        })
+        .catch(({ status, err }) => {
+            responseHelper.error(res, status, err);
+        });
+};
+
+
+
 const postNewVehicles = (req, res) => {
     const { body, userInfo } = req;
     console.log("[DEBUG] userInfo", userInfo);
@@ -99,21 +113,4 @@ const updateVehicle = (req, res) => {
         });
 };
 
-const postVehicleImage = (req, res) => {
-    const { body } = req;
-    const id = body.id;
-    vehicleModel
-        .postVehicleImage(id, body)
-        .then(({ status, result }) => {
-            responseHelper.success(res, status, result);
-        })
-        .catch(({ status, err }) => {
-            responseHelper.error(res, status, err);
-        });
-};
-
-
-
-
-
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, postVehicleImage };
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, getVehiclesLimit };

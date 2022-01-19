@@ -47,11 +47,9 @@ const deleteUser = (userId) => {
 };
 
 // UPDATE rental_arka.users SET name = 'okdwijaya' WHERE id =1;
-const updatedPutUser = (id, body) => {
+const updatedUser = (id, body) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = `UPDATE users 
-        SET ? 
-        WHERE id = ?`;
+        const sqlQuery = `UPDATE users SET ? WHERE id = ?`;
         dbConn.query(sqlQuery, [body, id], (err, result) => {
             if (err) return reject({ status: 500, err });
             if (result.length == 0) return resolve({ status: 404, result });
@@ -60,13 +58,4 @@ const updatedPutUser = (id, body) => {
     });
 };
 
-const patchUser = (body, id) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = `UPDATE users SET ? WHERE id = ?`;
-        dbConn.query(sqlQuery, [body, id], (err, result) => {
-            if (err) return reject({ status: 500, err });
-            resolve({ status: 200, result });
-        });
-    });
-};
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedPutUser, patchUser }; //, patchUser,  userUpdate
+module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedUser }; //, patchUser,  userUpdate

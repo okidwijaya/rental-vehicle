@@ -41,7 +41,7 @@ const userLogIn = (body) => {
                     email_address: result[0].email_address,
                 };
                 const jwtOptions = {
-                    expiresIn: "5m",
+                    expiresIn: "10h",
                     issuer: process.env.ISSUER,
                 }
                 jwt.sign(payload, process.env.SECRET_KEY, jwtOptions, (err, token) => {

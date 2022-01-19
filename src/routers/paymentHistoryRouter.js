@@ -4,17 +4,19 @@ const useController = require('../controllers/paymentHistoryController');
 
 const historyRouter = express.Router();
 
-historyRouter.get('/', useController.getPaymentHistory); //Rating
+historyRouter.get('/', useController.getAllPaymentHistory)
+
+historyRouter.get('/desc', useController.getPaymentHistory); //Rating
+
+historyRouter.get('/:id', useController.getHistoryById);
 
 historyRouter.get('/search', useController.getHistoryuser);
 
 historyRouter.post('/', useController.postNewHistory);
 
-historyRouter.get('/:id', useController.getHistoryById);
-
 historyRouter.delete('/:id', useController.deleteHistory);
 
-historyRouter.put('/', useController.updatePaymentHistory);
+historyRouter.patch('/', useController.updatePaymentHistory);
 
 module.exports = historyRouter;
 

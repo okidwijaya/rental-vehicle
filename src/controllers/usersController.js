@@ -57,11 +57,11 @@ const deleteUser = (req, res) => {
         });
 };
 
-const updatedPutUser = (req, res) => {
+const updatedUser = (req, res) => {
     const { body } = req;
     const id = body.id;
     userModel
-        .updatedPutUser(id, body)
+        .updatedUser(id, body)
         .then(({ status, result }) => {
             responseHelper.success(res, status, result);
         })
@@ -70,38 +70,4 @@ const updatedPutUser = (req, res) => {
         });
 };
 
-const userUpdate = (req, res) => {
-    const { id } = req.params;
-    const { nama } = req;
-    userModel
-        .userUpdate(id, nama)
-        .then(({ status, result }) => {
-            responseHelper.success(res, status, result);
-        })
-        .catch(({ status, err }) => {
-            responseHelper.error(res, status, err);
-        });
-};
-
-const patchUser = (req, res) => {
-    const { body } = req;
-    const id = body.id;
-    userModel
-        .patchUser(body, id)
-        .then(({ status, result }) => {
-            res.status(status).json({
-                msg: 'Success',
-                result: {
-                    ...body,
-                    url: req.file,
-                    id: result.insertId,
-                },
-            });
-        })
-        .catch(({ status, err }) => {
-            res.status(status).json({ msg: 'terjadi error', err });
-        });
-};
-
-
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, userUpdate, updatedPutUser, patchUser }; //, patchUser
+module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedUser }; //, patchUser
