@@ -17,8 +17,8 @@ mainRouter.use("/vehicles", getVehicles);
 mainRouter.use("/history", getPaymentHistory);
 mainRouter.use("/auth", authRouter);
 
-mainRouter.patch("/upload", upload.single("name"), (req, res) => {
-    const sqlQuery = "UPDATE image (name) VALUES (?) WHERE id = 8"; //UPDATE users SET ? WHERE id = ?
+mainRouter.post("/upload", upload.single("name"), (req, res) => {
+    const sqlQuery = "INSERT INTO image (name) VALUES (?)"; //UPDATE users SET ? WHERE id = ?
     dbConn.query(sqlQuery, [req.file.path], (err, result) => {
         //[req.file.destination]
         // if (err) return reject({ status: 500, err });
