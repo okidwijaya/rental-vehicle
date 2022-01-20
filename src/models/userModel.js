@@ -58,4 +58,16 @@ const updatedUser = (id, body) => {
     });
 };
 
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedUser }; //, patchUser,  userUpdate
+const updatedUserPicture = (id, path) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `UPDATE users SET picture = ?`;
+        dbConn.query(sqlQuery, [path, id], (err, result) => {
+            if (err) return reject({ status: 500, err });
+            if (result.length == 0) return resolve({ status: 404, result });
+            resolve({ status: 200, result });
+        });
+    });
+};
+
+
+module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture }; //, patchUser,  userUpdate

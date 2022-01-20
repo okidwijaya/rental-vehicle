@@ -7,7 +7,7 @@ const cors = require('cors');
 const server = express();
 const logger = morgan(':method :url :status :res[content-length] - :response-time ms');
 
-const port = 8000;
+const port = process.env.PORT || 8000;
 server.listen(port, () => {
     console.log(`listening on port ${port}`);
 });

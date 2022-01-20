@@ -70,4 +70,16 @@ const updatedUser = (req, res) => {
         });
 };
 
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedUser }; //, patchUser
+const updatedUserPicture = (req, res) => {
+    const { path } = req;
+    userModel
+        .updatedUserPicture( path)
+        .then(({ status, result }) => {
+            responseHelper.success(res, status, result);
+        })
+        .catch(({ status, err }) => {
+            responseHelper.error(res, status, err);
+        });
+};
+
+module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture }; //, patchUser

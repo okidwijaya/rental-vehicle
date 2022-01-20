@@ -13,22 +13,22 @@ const storage = multer.diskStorage({
     },
 });
 
-// const upload = multer({ //multer settings
-//     storage: storage,
-//     fileFilter: function(req, file, callback) {
-//         // var file = path.extname(file.originalname);
-//         if (file !== '.png' && file !== '.jpg' && file !== '.gif' && file !== '.jpeg') {
-//             return callback(new Error('Only images are allowed'))
-//         }
-//         callback(null, true)
-//     },
-//     limits: {
-//         fileSize: 1024 * 1024
-//     }
-// });
+const upload = multer({ //multer settings
+    storage: storage,
+    fileFilter: function(req, file, callback) {
+        // var file = path.extname(file.originalname);
+        if (file !== '.png' && file !== '.jpg' && file !== '.gif' && file !== '.jpeg') {
+            return callback(new Error('Only images are allowed'))
+        }
+        callback(null, true)
+    },
+    limits: {
+        fileSize: 1024 * 1024
+    }
+});
 
 
 
-const multerOptions = { storage };
+const multerOptions = { storage, upload };
 
 module.exports = multer(multerOptions);
