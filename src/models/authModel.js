@@ -41,6 +41,7 @@ const userLogIn = (body) => {
                     name: result[0].name,
                     email_address: result[0].email_address,
                     role:result[0].role,
+                    picture: result[0].picture,
                 };
                 const jwtOptions = {
                     expiresIn: "10h",
@@ -56,6 +57,8 @@ const userLogIn = (body) => {
                             name: result[0].name,
                             email_address: result[0].email_address,
                             role:result[0].role,
+                            picture: result[0].picture,
+                            payload,
                         },
                     });
                 });
