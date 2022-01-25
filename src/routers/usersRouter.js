@@ -13,7 +13,7 @@ userRouter.get('/:id', useController.getUserById);
 
 userRouter.delete('/:id', useController.deleteUser);
 
-userRouter.patch('/', useController.updatedUser);
+userRouter.patch('/',upload.single('picture'), useController.updatedUser);
 
 userRouter.patch('/picture',upload.single('picture'), useController.updatedUserPicture);
 

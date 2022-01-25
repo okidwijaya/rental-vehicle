@@ -18,7 +18,7 @@ mainRouter.use("/history", getPaymentHistory);
 mainRouter.use("/auth", authRouter);
 
 mainRouter.post("/upload", upload.single("name"), (req, res) => {
-    const sqlQuery = "INSERT INTO image (name) VALUES (?)"; //UPDATE users SET ? WHERE id = ?
+    const sqlQuery = "INSERT INTO image (image_path) VALUES (?)"; //UPDATE users SET ? WHERE id = ?
     dbConn.query(sqlQuery, [req.file.path], (err, result) => {
         //[req.file.destination]
         // if (err) return reject({ status: 500, err });

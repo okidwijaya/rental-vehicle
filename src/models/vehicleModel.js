@@ -3,7 +3,7 @@ const mysql = require('mysql');
 
 const getVehicles = () => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM vehicles'; //DESC
+        const sqlQuery = 'SELECT * FROM vehicles LIMIT 8'; //DESC
         dbConn.query(sqlQuery, (err, result) => {
             if (err) return reject({ status: 500, err });
             if (result.length == 0) return resolve({ status: 404, result });

@@ -26,7 +26,7 @@ const createNewUser = (body) => {
 
 const userLogIn = (body) => {
     return new Promise((resolve, reject) => {
-        const { email_address, password } = body;
+        const { email_address, password, name } = body;
         const sqlQuery = `SELECT * FROM users WHERE ?`; //AND ?
         dbConn.query(sqlQuery, { email_address }, (err, result) => { //, { password }]
 
@@ -38,7 +38,9 @@ const userLogIn = (body) => {
                 if (err) return reject({ status: 500, err });
                 const payload = {
                     id: result[0].id,
+                    name: result[0].name,
                     email_address: result[0].email_address,
+                    role:result[0].role,
                 };
                 const jwtOptions = {
                     expiresIn: "10h",
@@ -50,7 +52,10 @@ const userLogIn = (body) => {
                         status: 200,
                         result: {
                             token,
-                            payload,
+                            id: result[0].id,
+                            name: result[0].name,
+                            email_address: result[0].email_address,
+                            role:result[0].role,
                         },
                     });
                 });
@@ -59,4 +64,10 @@ const userLogIn = (body) => {
         });
     });
 };
-module.exports = { createNewUser, userLogIn };
+
+const signout = () => {
+    return res.status(200).send({ 
+        message: "signed out!"
+    })
+}
+module.exports = { createNewUser, userLogIn,signout };
