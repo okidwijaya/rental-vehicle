@@ -53,11 +53,6 @@ const userLogIn = (body) => {
                         status: 200,
                         result: {
                             token,
-                            id: result[0].id,
-                            name: result[0].name,
-                            email_address: result[0].email_address,
-                            role:result[0].role,
-                            picture: result[0].picture,
                             payload,
                         },
                     });
