@@ -4,7 +4,7 @@ const responseHelper = require('../helpers/sendResponse');
 const getUsers = (req, res) => {
     const { id } = req.userInfo;
     console.log("[DEBUG] userInfo", id);
-    usersModel
+    userModel
       .getUsers(id)
       .then(({ status, result }) => {
         responseHelper.success(res, status, result);
