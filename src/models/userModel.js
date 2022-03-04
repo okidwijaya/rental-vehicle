@@ -60,7 +60,7 @@ const updatedUser = (id, body) => {
 
 const updatedUserPicture = (id, path) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = `UPDATE users SET picture = ?`;
+        const sqlQuery = `UPDATE rental_arka.users SET picture = ? WHERE id = 1`;
         dbConn.query(sqlQuery, [path, id], (err, result) => {
             if (err) return reject({ status: 500, err });
             if (result.length == 0) return resolve({ status: 404, result });

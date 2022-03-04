@@ -13,7 +13,7 @@ server.listen(port, () => {
 });
 
 const corsOptions = {
-    origin: ["http://localhost:3000","https://arkarentaldeploy.netlify.app"],
+    origin: ["http://localhost:3000","https://arkarentaldeploy.netlify.app", "http://localhost:8081"],
     allowedHeaders:[ "x-access-token", "content-type"],
     method: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
 };
