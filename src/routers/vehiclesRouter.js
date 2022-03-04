@@ -24,6 +24,6 @@ vehicleRouter.delete("/:id", useController.deleteVehicle);
 
 vehicleRouter.patch("/", useController.updateVehicle);
 
-vehicleRouter.patch("/:id", authorize.checkToken, authorize.authOwner, upload.multiUpload, vehicleController.updateVehicleById);
+// vehicleRouter.patch("/:id", authorize.checkToken, authorize.authOwner, useController.updateVehicleById);
 
 module.exports = vehicleRouter;
