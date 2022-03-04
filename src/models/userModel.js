@@ -5,7 +5,7 @@ const dbConn = require('../config/db');
 const getUsers = (id) => {
     return new Promise((resolve, reject) => {
         const sqlQuery = "SELECT * FROM users WHERE id = ?";
-        db.query(sqlQuery, id, (err, result) => {
+        dbConn.query(sqlQuery, id, (err, result) => {
             if (err) return reject({
                 status: 500,
                 err
