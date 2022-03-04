@@ -8,6 +8,8 @@ const userRouter = express.Router();
 
 userRouter.get('/', authorize.roleTokenAuth , useController.getUsers);
 
+userRouter.get('/allusers', authorize.roleTokenAuth , useController.getAllUsers);
+
 userRouter.post('/', useController.postNewUser);
 
 userRouter.get('/:id', useController.getUserById);

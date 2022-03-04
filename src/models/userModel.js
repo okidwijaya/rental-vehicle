@@ -2,7 +2,20 @@ const req = require('express/lib/request');
 const res = require('express/lib/response');
 const dbConn = require('../config/db');
 
-const getUsers = () => {
+const getUsers = (req, res) => {
+    const { id } = req.userInfo;
+    console.log("[DEBUG] userInfo", id);
+    usersModel
+      .getUsers(id)
+      .then(({ status, result }) => {
+        responseHelper.success(res, status, result);
+      })
+      .catch(({ status, err }) => {
+        responseHelper.error(res, status, err);
+      });
+  };
+
+const getAllUsers = () => {
     return new Promise((resolve, reject) => {
         const sqlQuery = `SELECT * FROM users ORDER BY id DESC`;
         dbConn.query(sqlQuery, (err, result) => {
@@ -70,4 +83,4 @@ const updatedUserPicture = (id, path) => {
 };
 
 
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture }; //, patchUser,  userUpdate
+module.exports = { getUsers, getAllUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture }; //, patchUser,  userUpdate

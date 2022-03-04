@@ -2,9 +2,22 @@ const userModel = require('../models/userModel');
 const responseHelper = require('../helpers/sendResponse');
 
 const getUsers = (req, res) => {
+    const { id } = req.userInfo;
+    console.log("[DEBUG] userInfo", id);
+    usersModel
+      .getUsers(id)
+      .then(({ status, result }) => {
+        responseHelper.success(res, status, result);
+      })
+      .catch(({ status, err }) => {
+        responseHelper.error(res, status, err);
+      });
+  };
+
+const getAllUsers = (req, res) => {
     const { body } = req;
     userModel
-        .getUsers(body)
+        .getAllUsers(body)
         .then(({ status, result }) => {
             responseHelper.success(res, status, result);
         })
@@ -82,4 +95,4 @@ const updatedUserPicture = (req, res) => {
         });
 };
 
-module.exports = { getUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture }; //, patchUser
+module.exports = { getUsers, getAllUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture }; //, patchUser
