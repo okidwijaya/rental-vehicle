@@ -2,18 +2,21 @@ const req = require('express/lib/request');
 const res = require('express/lib/response');
 const dbConn = require('../config/db');
 
-const getUsers = (req, res) => {
-    const { id } = req.userInfo;
-    console.log("[DEBUG] userInfo", id);
-    usersModel
-      .getUsers(id)
-      .then(({ status, result }) => {
-        responseHelper.success(res, status, result);
-      })
-      .catch(({ status, err }) => {
-        responseHelper.error(res, status, err);
-      });
-  };
+const getUsers = (id) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = "SELECT * FROM users WHERE id = ?";
+        db.query(sqlQuery, id, (err, result) => {
+            if (err) return reject({
+                status: 500,
+                err
+            });
+            resolve({
+                status: 200,
+                result
+            })
+        });
+    });
+};
 
 const getAllUsers = () => {
     return new Promise((resolve, reject) => {
