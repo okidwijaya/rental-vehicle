@@ -119,13 +119,13 @@ const postVehicle = (req, res) => {
     console.log('body', body);
     console.log('files', files);
 
-    const imagesVeh = files;
+    const imagesVehiclesFiles = files;
     let dataImages = []
     let newBody;
 
-    if(imagesVeh) {
-        for (let i = 0; i < imagesVeh.length; i++) {
-            dataImages.push(imagesVeh[i].filename);
+    if(imagesVehiclesFiles) {
+        for (let i = 0; i < imagesVehiclesFiles.length; i++) {
+            dataImages.push(imagesVehiclesFiles[i].filename);
         }
         let vehicleImages = JSON.stringify(dataImages);
         newBody = {
