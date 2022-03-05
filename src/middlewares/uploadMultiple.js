@@ -1,57 +1,62 @@
 const multer = require("multer");
 const path = require("path");
 
-const maxFileSize = 2 * 1024 * 1024;
-
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/images/vehicle/");
+  destination: (req, res, cb) => {
+    // if () return;
+    cb(null, "./public/images/vehicle");
   },
   filename: (req, file, cb) => {
-    const format = `vehicle-${Date.now()}${path.extname(file.originalname)}`;
+    const format = `${file.fieldname}-${Date.now()}${path.extname(
+      file.originalname
+    )}`;
     cb(null, format);
   },
 });
 
-const multerOptions = {
+// const uploadImage = multer ({
+//     storage,
+//     limits: {
+//         fileSize: 2 * 1024 * 1024
+//     },
+//     fileFilter(req, file, cb) {
+//         if(!file.mimetype == 'jpg' || !file.mimetype == 'png' || !file.mimetype == 'jpeg') {
+//             cb(null, false);
+//             return cb(new Error('Format image must jpg, img, jpeg'))
+//         }
+//         cb(null, true);
+//     }
+// });
+
+const uploadImage = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
-      return cb(null, true);
+    if (
+      (console.log(file.mimetype),
+      file.mimetype == "image/png" ||
+        file.mimetype == "image/jpg" ||
+        file.mimetype == "image/jpeg")
+    ) {
+      cb(null, true);
     } else {
-      // return cb(null, false);
-      const err = new Error("Only .png / .jpg / .jpeg file format allowed.");
-      err.code = "WRONG_EXTENSION";
-      return cb(err, false);
+      cb(null, false);
+      return cb(new Error("File must type of type .jpg .png .jpeg"));
     }
   },
-  limits: { fileSize: maxFileSize },
-};
+//   limits: { fileSize: 2 * 1024 * 1024 }
+});
 
-const upload = multer(multerOptions).array("vehiclePicture", 3);
-const multerHandler = (req, res, next) => {
-  upload(req, res, (err) => {
-    if (err) {
-      if (err && err.code === "LIMIT_FILE_SIZE") {
-        return res.status(400).json({
-          err: err.code,
-          errMsg: "Image file size exceeded limit(2MB).",
-        });
-      }
-      if (err && err.code === "WRONG_EXTENSION") {
-        return res.status(400).json({
-          err: err.code,
-          errMsg: "Only .png / .jpg / .jpeg file format allowed.",
-        });
-      }
-      return res.status(500).json({
-        errMsg: "Error occurred",
-        err,
-      });
+const multiple = uploadImage.array("images", 3);
+
+const uploadMultiple = (req, res, next) => {
+  multiple(req, res, (err) => {
+    if (err && err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ msg: "File is too big" });
+    } else if (err) {
+      return res.status(400).json({ msg: "File must type .jpg .png .jpeg" });
     }
     next();
   });
 };
 
-module.exports = multerHandler;
+module.exports = uploadMultiple;

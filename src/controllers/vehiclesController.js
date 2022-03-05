@@ -113,4 +113,47 @@ const updateVehicle = (req, res) => {
         });
 };
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, getVehiclesLimit };
+const postVehicle = (req, res) => {
+    const { body, files } = req;
+    // const { id } = req.userInfo;
+    console.log('body', body);
+    console.log('files', files);
+
+    const imagesVeh = files;
+    let dataImages = []
+    let newBody;
+
+    if(imagesVeh) {
+        for (let i = 0; i < imagesVeh.length; i++) {
+            dataImages.push(imagesVeh[i].filename);
+        }
+        let vehicleImages = JSON.stringify(dataImages);
+        newBody = {
+            ...body,
+            images: vehicleImages,
+        };
+    }
+
+    vehicleModel
+        .postVehicle(newBody)
+        .then(({
+            status,
+            result
+        }) => {
+            res.status(status).json({
+                msg: "Add Vehicle Success",
+                result: {
+                    ...newBody,
+                    id: result.insertId
+                },
+            });
+        })
+        .catch(({
+            status,
+            err
+        }) => {
+            responseHelper.error(res, status, err)
+        });
+};
+
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, getVehiclesLimit, postVehicle };

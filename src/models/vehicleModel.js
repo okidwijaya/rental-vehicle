@@ -122,4 +122,23 @@ const updateVehicle = (id, body) => {
     });
 };
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle,  getVehiclesLimit }; //, getVehiclesLimit
+const postVehicle = (newBody) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `INSERT INTO vehicles SET ?`;
+        newBody = {
+            ...newBody,
+        }     
+        dbConn.query(sqlQuery, newBody, (err, result) => {
+            if (err) return reject({
+                status: 500,
+                err
+            });
+            resolve({
+                status: 200,
+                result
+            });
+        });
+    });
+};
+
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle,  getVehiclesLimit, postVehicle }; //, getVehiclesLimit
