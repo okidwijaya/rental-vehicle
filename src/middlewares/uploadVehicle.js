@@ -14,19 +14,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// const uploadImage = multer ({
-//     storage,
-//     limits: {
-//         fileSize: 2 * 1024 * 1024
-//     },
-//     fileFilter(req, file, cb) {
-//         if(!file.mimetype == 'jpg' || !file.mimetype == 'png' || !file.mimetype == 'jpeg') {
-//             cb(null, false);
-//             return cb(new Error('Format image must jpg, img, jpeg'))
-//         }
-//         cb(null, true);
-//     }
-// });
 
 const uploadImage = multer({
   storage,

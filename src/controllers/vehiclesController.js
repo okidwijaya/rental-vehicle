@@ -113,17 +113,19 @@ const updateVehicle = (req, res) => {
         });
 };
 
-const postVehicle = (req, res) => {
+const insertDataVehicles = (req, res) => {
     const { body, files } = req;
     // const { id } = req.userInfo;
-    
-    const imagesVehiclesFiles = files;
+    console.log('body', body);
+    console.log('files', files);
+
+    const imagesVeh = files;
     let dataImages = []
     let newBody;
-    
-    if(imagesVehiclesFiles) {
-        for (let i = 0; i < imagesVehiclesFiles.length; i++) {
-            dataImages.push(imagesVehiclesFiles[i].filename);
+
+    if(imagesVeh) {
+        for (let i = 0; i < imagesVeh.length; i++) {
+            dataImages.push(imagesVeh[i].filename);
         }
         let vehicleImages = JSON.stringify(dataImages);
         newBody = {
@@ -131,17 +133,15 @@ const postVehicle = (req, res) => {
             images: vehicleImages,
         };
     }
-    console.log('body', body);
-    console.log('files', files);
-    
+
     vehicleModel
-        .postVehicle(newBody)
+        .insertDataVehicles(newBody)
         .then(({
             status,
             result
         }) => {
             res.status(status).json({
-                msg: "Add Vehicle Success",
+                msg: "Vehicle has been added",
                 result: {
                     ...newBody,
                     id: result.insertId
@@ -156,4 +156,4 @@ const postVehicle = (req, res) => {
         });
 };
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, getVehiclesLimit, postVehicle };
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle, getVehiclesLimit, insertDataVehicles };

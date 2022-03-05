@@ -122,11 +122,13 @@ const updateVehicle = (id, body) => {
     });
 };
 
-const postVehicle = (newBody) => {
+const insertDataVehicles = (newBody) => {
     return new Promise((resolve, reject) => {
         const sqlQuery = `INSERT INTO vehicles SET ?`;
+
         newBody = {
             ...newBody,
+            // id,
         }     
         dbConn.query(sqlQuery, newBody, (err, result) => {
             if (err) return reject({
@@ -141,4 +143,5 @@ const postVehicle = (newBody) => {
     });
 };
 
-module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle,  getVehiclesLimit, postVehicle }; //, getVehiclesLimit
+
+module.exports = { getVehicles, postNewVehicles, getVehicleById, deleteVehicle, getVehiclesName, getOrder, updateVehicle,  getVehiclesLimit, insertDataVehicles  }; //, getVehiclesLimit
