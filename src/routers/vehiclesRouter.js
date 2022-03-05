@@ -4,7 +4,7 @@ const multer = require("multer");
 const useController = require("../controllers/vehiclesController");
 const authorize = require("../middlewares/authorize");
 // const upload = require("../middlewares/upload");
-const upload = require("../middlewares/uploadMultiple");
+const uploadMultiple = require("../middlewares/uploadMultiple");
 
 const vehicleRouter = express.Router();
 
