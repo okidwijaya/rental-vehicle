@@ -116,13 +116,11 @@ const updateVehicle = (req, res) => {
 const postVehicle = (req, res) => {
     const { body, files } = req;
     // const { id } = req.userInfo;
-    console.log('body', body);
-    console.log('files', files);
-
+    
     const imagesVehiclesFiles = files;
     let dataImages = []
     let newBody;
-
+    
     if(imagesVehiclesFiles) {
         for (let i = 0; i < imagesVehiclesFiles.length; i++) {
             dataImages.push(imagesVehiclesFiles[i].filename);
@@ -133,7 +131,9 @@ const postVehicle = (req, res) => {
             images: vehicleImages,
         };
     }
-
+    console.log('body', body);
+    console.log('files', files);
+    
     vehicleModel
         .postVehicle(newBody)
         .then(({
