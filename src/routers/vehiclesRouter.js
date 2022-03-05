@@ -26,6 +26,6 @@ vehicleRouter.patch("/", useController.updateVehicle);
 
 // vehicleRouter.patch("/:id", authorize.checkToken, authorize.authOwner, useController.updateVehicleById);
 
-vehicleRouter.post("/", authorize.roleTokenAuth, uploadVehicle, useController.postVehicle);
+vehicleRouter.post("/", authorize.roleTokenAuth, uploadVehicle, useController.insertDataVehicles);
 
 module.exports = vehicleRouter;
