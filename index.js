@@ -22,7 +22,7 @@ server.use(cors(corsOptions));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 server.use(logger);
-server.use(express.static('public'));
+server.use(express.static('pictures'));
 
 // server.options("/*", (req, res) => {
 //   const corsHeader = {

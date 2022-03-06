@@ -5,7 +5,7 @@ const path = require("path");
 const storage = multer.diskStorage({
     destination: (req, res, cb) => {
         // if () return;
-        cb(null, "./public/images/profile")
+        cb(null, "pictures")
     },
     filename: (req, file, cb) => {
         const format = `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
@@ -55,6 +55,7 @@ const multerHandler = (req, res, next) => {
         if(err && err.code === "LIMIT_FILE_SIZE") {
            return res.status(400).json({msg: "File is too big"});
         } else if (err) {
+            console.log('ojan :' + err)
             return res.status(400).json({msg: "File must type of type .jpg .png .jpeg"});
         }
         next();
