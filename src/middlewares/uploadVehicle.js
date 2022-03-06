@@ -37,6 +37,7 @@ const multerHandler = (req, res, next) => {
         if(err && err.code === "LIMIT_FILE_SIZE") {
            return res.status(400).json({msg: "File size exceeds the limit"});
         } else if (err) {
+            console.log('ojan ' + err);
             return res.status(400).json({msg: "Only .png, .jpg and .jpeg format allowed!"});
         }
         next();
@@ -48,6 +49,7 @@ const multiUpload = (req, res, next) => {
         if(err && err.code === "LIMIT_FILE_SIZE") {
            return res.status(400).json({msg: "File size exceeds the limit"});
         } else if (err) {
+            console.log('ojan ' + err);
             return res.status(400).json({msg: "Only .png, .jpg and .jpeg format allowed!"});
         }
         next();
