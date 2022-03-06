@@ -29,7 +29,7 @@ const uploads = multer({
 });
 
 const single = uploads.single("image");
-const multiple = uploads.array("imgVehicle", 3);
+const multiple = uploads.array("images", 3);
 
 
 const multerHandler = (req, res, next) => {
