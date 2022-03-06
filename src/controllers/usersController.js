@@ -95,4 +95,39 @@ const updatedUserPicture = (req, res) => {
         });
 };
 
-module.exports = { getUsers, getAllUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture }; //, patchUser
+const patchDataUsers = (req, res) => {
+    const { body } = req;
+    const { id } = req.userInfo;
+    // console.log('body', body);
+    // console.log(req.file.filename)
+    // const saveImage = {...body, image: req.file.filename}
+    let saveImage;
+  
+    console.log(req.file)
+  
+    if (req.file) {
+      saveImage = {
+        ...body,
+        image : req.file.filename,
+      };
+    } else {
+      saveImage = {...body}
+    }
+  
+    userModel
+      .patchDataUsers(saveImage, id)
+      .then(({ status }) => {
+        res.status(status).json({
+          msg: "Data Updated",
+          result: {
+            ...saveImage,
+          },
+        });
+        // responseHelper(res, status, result);
+      })
+      .catch(({ status, err }) => {
+        responseHelper.error(res, status, err);
+      });
+  };
+
+module.exports = { getUsers, getAllUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture, patchDataUsers }; //, patchUser

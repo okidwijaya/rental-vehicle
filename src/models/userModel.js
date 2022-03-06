@@ -85,5 +85,21 @@ const updatedUserPicture = (id, path) => {
     });
 };
 
+const patchDataUsers = (saveImage, id) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `UPDATE users SET ? WHERE id = ?`;
+        dbConn.query(sqlQuery, [saveImage, id], (err, result) => {
+            if (err) return reject({
+                status: 500,
+                err
+            })
+            resolve({
+                status: 200,
+                result
+            });
+        });
+    });
+};
 
-module.exports = { getUsers, getAllUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture }; //, patchUser,  userUpdate
+
+module.exports = { getUsers, getAllUsers, postNewUser, deleteUser, getUserById, updatedUser, updatedUserPicture, patchDataUsers }; //, patchUser,  userUpdate

@@ -16,7 +16,9 @@ userRouter.get('/:id', useController.getUserById);
 
 userRouter.delete('/:id', useController.deleteUser);
 
-userRouter.patch('/',upload.single('picture'), useController.updatedUser);
+// userRouter.patch('/',upload.single('picture'), useController.updatedUser);
+
+usersRouter.patch('/', authorize.checkToken ,upload, usersController.patchDataUsers)
 
 userRouter.patch('/picture',upload.single('propicture'), useController.updatedUserPicture);
 

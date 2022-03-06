@@ -1,34 +1,65 @@
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
+
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "./pictures");
+    destination: (req, res, cb) => {
+        // if () return;
+        cb(null, "./public/images/profile")
     },
     filename: (req, file, cb) => {
-        const fileFormat = `${file.fieldname}-${Date.now()}${path.extname(
-        file.originalname
-      )}`;
-        cb(null, fileFormat);
+        const format = `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+        cb(
+            null,
+            format
+        );
     },
 });
 
-const upload = multer({ //multer settings
-    storage: storage,
-    fileFilter: function(req, file, callback) {
-        // var file = path.extname(file.originalname);
-        if (file !== '.png' && file !== '.jpg' && file !== '.gif' && file !== '.jpeg') {
-            return callback(new Error('Only images are allowed'))
+// const uploadImage = multer ({
+//     storage,
+//     limits: {
+//         fileSize: 2 * 1024 * 1024
+//     },
+//     fileFilter(req, file, cb) {
+//         if(!file.mimetype == 'jpg' || !file.mimetype == 'png' || !file.mimetype == 'jpeg') {
+//             cb(null, false);
+//             return cb(new Error('Format image must jpg, img, jpeg'))
+//         }
+//         cb(null, true);
+//     }
+// });
+
+
+const uploadImage = multer({ 
+    storage,
+    fileFilter: (req, file, cb) => {
+        if (
+            file.mimetype == "image/png" || 
+            file.mimetype == "image/jpg" || 
+            file.mimetype == "image/jpeg"
+        ) {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            return cb(new Error("File must type of type .jpg .png .jpeg"))
         }
-        callback(null, true)
     },
-    limits: {
-        fileSize: 1024 * 1024
-    }
+    limits: { fileSize: 2 * 1024 * 1024 }
 });
 
+const single = uploadImage.single("image")
+
+const multerHandler = (req, res, next) => {
+    single(req, res, (err) => {
+        if(err && err.code === "LIMIT_FILE_SIZE") {
+           return res.status(400).json({msg: "File is too big"});
+        } else if (err) {
+            return res.status(400).json({msg: "File must type of type .jpg .png .jpeg"});
+        }
+        next();
+    });
+};
 
 
-const multerOptions = { storage, upload };
-
-module.exports = multer(multerOptions);
+module.exports = multerHandler;
