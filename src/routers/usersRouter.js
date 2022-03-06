@@ -18,8 +18,8 @@ userRouter.delete('/:id', useController.deleteUser);
 
 // userRouter.patch('/',upload.single('picture'), useController.updatedUser);
 
-usersRouter.patch('/', authorize.checkToken ,upload, usersController.patchDataUsers)
+userRouter.patch('/', authorize.checkToken ,upload, usersController.patchDataUsers)
 
-userRouter.patch('/picture',upload.single('propicture'), useController.updatedUserPicture);
+// userRouter.patch('/picture',upload.single('propicture'), useController.updatedUserPicture);
 
 module.exports = userRouter;
