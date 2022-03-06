@@ -9,7 +9,7 @@ const getVehicles = require("./vehiclesRouter");
 const getPaymentHistory = require("./paymentHistoryRouter");
 const authRouter = require("./auth");
 
-const upload = require("../middlewares/upload");
+// const upload = require("../middlewares/upload");
 
 mainRouter.use("/welcome", welcomeRouter);
 mainRouter.use("/users", getUsers);
@@ -17,14 +17,14 @@ mainRouter.use("/vehicles", getVehicles);
 mainRouter.use("/history", getPaymentHistory);
 mainRouter.use("/auth", authRouter);
 
-mainRouter.post("/upload", upload.single("name"), (req, res) => {
-    const sqlQuery = "INSERT INTO image (image_path) VALUES (?)"; //UPDATE users SET ? WHERE id = ?
-    dbConn.query(sqlQuery, [req.file.path], (err, result) => {
-        //[req.file.destination]
-        // if (err) return reject({ status: 500, err });
-        return res.status(200).json({ msg: 'Upload successful', url: req.file });
-  });
-});
+// mainRouter.post("/upload", upload.single("name"), (req, res) => {
+//     const sqlQuery = "INSERT INTO image (image_path) VALUES (?)"; //UPDATE users SET ? WHERE id = ?
+//     dbConn.query(sqlQuery, [req.file.path], (err, result) => {
+//         //[req.file.destination]
+//         // if (err) return reject({ status: 500, err });
+//         return res.status(200).json({ msg: 'Upload successful', url: req.file });
+//   });
+// });
 
 mainRouter.get("/", (request, response) => {
   response.redirect("welcome");
