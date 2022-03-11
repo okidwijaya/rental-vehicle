@@ -62,9 +62,14 @@ const userLogIn = (body) => {
   });
 };
 
-const signout = () => {
-  return res.status(200).send({
-    message: "signed out!",
+const logoutUser = (token) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = "INSERT INTO blacklist_token (token) VALUES (?)";
+
+    dbConn.query(sqlQuery, [token], (err, result) => {
+      if (err) return reject({ status: 500, err });
+      resolve({ status: 200, result });
+    });
   });
 };
-module.exports = { createNewUser, userLogIn, signout };
+module.exports = { createNewUser, userLogIn, logoutUser };

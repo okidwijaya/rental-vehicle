@@ -1,16 +1,18 @@
-const express = require('express');
+const express = require("express");
 
 const authRouter = express.Router();
 
-const authController = require('../controllers/authController');
+const authController = require("../controllers/authController");
 
-const validate = require('../middlewares/validate');
+const validate = require("../middlewares/validate");
+
+const authorize = require("../middlewares/authorize");
 
 // auth/signIn
-authRouter.post('/signIn', authController.signInUser);
+authRouter.post("/signIn", authController.signInUser);
 
-authRouter.post('/signUp', validate.register, authController.newUserRegisters);
+authRouter.post("/signUp", validate.register, authController.newUserRegisters);
 
-authRouter.delete('/logOut');
+authRouter.delete("/logout", authorize.roleTokenAuth, authController.logout);
 
 module.exports = authRouter;
