@@ -40,7 +40,7 @@ const postNewHistory = (body) => {
 
 const getHistoryById = (historyId) => {
   return new Promise((resolve, reject) => {
-    const sqlQuery = `SELECT * FROM payment_history WHERE id= ${historyId}`;
+    const sqlQuery = `SELECT * FROM payment_history WHERE user_payment_id = ${historyId}`;
     dbConn.query(sqlQuery, (err, result) => {
       if (err) return reject({ status: 500, err });
       resolve({ status: 200, result });
