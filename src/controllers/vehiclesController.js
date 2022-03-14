@@ -101,17 +101,43 @@ const getOrder = (req, res) => {
 };
 
 const updateVehicle = (req, res) => {
+    // const { params } = req;
+    // const userId = params.id;
     const { body } = req;
-    const id = body.id;
+    const { id } = body.id;
+
+
+    // console.log('body', body);
+    // console.log(req.file.filename)
+    // const saveImage = {...body, image: req.file.filename}
+    let saveImage;
+  
+    console.log(req.file)
+  
+    if (req.file) {
+      saveImage = {
+        ...body,
+        image : req.file.filename,
+      };
+    } else {
+      saveImage = {...body}
+    }
+  
     vehicleModel
-        .updateVehicle(id, body)
-        .then(({ status, result }) => {
-            responseHelper.success(res, status, result);
-        })
-        .catch(({ status, err }) => {
-            responseHelper.error(res, status, err);
+      .updateVehicle(saveImage, id)
+      .then(({ status }) => {
+        res.status(status).json({
+          msg: "Data Updated",
+          result: {
+            ...saveImage,
+          },
         });
-};
+        // responseHelper(res, status, result);
+      })
+      .catch(({ status, err }) => {
+        responseHelper.error(res, status, err);
+      });
+  };
 
 const insertDataVehicles = (req, res) => {
     const { body, files } = req;

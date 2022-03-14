@@ -4,6 +4,7 @@ const multer = require("multer");
 const useController = require("../controllers/vehiclesController");
 const authorize = require("../middlewares/authorize");
 // const upload = require("../middlewares/upload");
+const upload = require("../middlewares/upload");
 const uploadVehicle = require("../middlewares/uploadVehicle");
 
 const vehicleRouter = express.Router();
@@ -20,7 +21,8 @@ vehicleRouter.get("/:id", useController.getVehicleById);
 
 vehicleRouter.delete("/:id", useController.deleteVehicle);
 
-vehicleRouter.patch("/", useController.updateVehicle);
+vehicleRouter.patch("/", authorize.roleTokenAuth,
+upload, useController.updateVehicle);
 
 vehicleRouter.post(
   "/",

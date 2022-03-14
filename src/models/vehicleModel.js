@@ -115,15 +115,20 @@ const getOrder = (query) => {
   });
 };
 
-const updateVehicle = (id, body) => {
+const updateVehicle = (saveImage, id) => {
   return new Promise((resolve, reject) => {
-    const sqlQuery = `UPDATE vehicles SET ? WHERE id = ?`;
-    dbConn.query(sqlQuery, [body, id], (err, result) => {
-      if (err) return reject({ status: 500, err });
-      if (result.length == 0) return resolve({ status: 404, result });
-      resolve({ status: 200, result });
-    });
+    const sqlQuery = `UPDATE vehicles SET ? WHERE id = ${id}`;
+    dbConn.query(sqlQuery, saveImage, (err, result) => {
+      if (err) return reject({
+          status: 500,
+          err
+      })
+      resolve({
+          status: 200,
+          result
+      });
   });
+});
 };
 
 const insertDataVehicles = (newBody) => {
