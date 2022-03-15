@@ -118,7 +118,7 @@ const getOrder = (query) => {
 const updateVehicle = (saveImage, id) => {
   return new Promise((resolve, reject) => {
     const sqlQuery = `UPDATE vehicles SET ? WHERE id = ${id}`;
-    dbConn.query(sqlQuery, saveImage, (err, result) => {
+    dbConn.query(sqlQuery, [saveImage, id], (err, result) => {
       if (err) return reject({
           status: 500,
           err

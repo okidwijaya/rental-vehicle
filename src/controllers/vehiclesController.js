@@ -102,9 +102,9 @@ const getOrder = (req, res) => {
 
 const updateVehicle = (req, res) => {
     // const { params } = req;
-    // const userId = params.id;
+    // const id = params.id;
     const { body } = req;
-    const { id } = body.id;
+    const { id } = req.body.id;
 
 
     // console.log('body', body);
