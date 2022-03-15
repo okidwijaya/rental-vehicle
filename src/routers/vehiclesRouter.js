@@ -21,11 +21,11 @@ vehicleRouter.get("/:id", useController.getVehicleById);
 
 vehicleRouter.delete("/:id", useController.deleteVehicle);
 
-vehicleRouter.patch("/", authorize.roleTokenAuth,
-uploadVehicle.multiUpload,, useController.updateVehicle);
+vehicleRouter.patch("/:id", authorize.roleTokenAuth,
+uploadVehicle.multiUpload, useController.updateVehicle);
 
 vehicleRouter.post(
-  "/:id",
+  "/",
   authorize.roleTokenAuth,
   uploadVehicle.multiUpload,
   useController.insertDataVehicles
