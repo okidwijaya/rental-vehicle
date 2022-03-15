@@ -25,7 +25,7 @@ vehicleRouter.patch("/", authorize.roleTokenAuth,
 upload, useController.updateVehicle);
 
 vehicleRouter.post(
-  "/",
+  "/:id",
   authorize.roleTokenAuth,
   uploadVehicle.multiUpload,
   useController.insertDataVehicles
