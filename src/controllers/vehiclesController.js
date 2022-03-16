@@ -101,42 +101,46 @@ const getOrder = (req, res) => {
 };
 
 const updateVehicle = (req, res) => {
-    const { params } = req;
-    const id = params.id;
-    let { body } = req;
-    // const { id } = req.body.id;
+    // const { params } = req;
+    // const id = params.id;
+    // let { body } = req;
+    const { body, params, files } = req;
+  const vehicleId = params.id;
+  const imgVehicle = files;
+  let dataImg = [];
+  let newBody;
 
-
-    // console.log('body', body);
-    // console.log(req.file.filename)
-    // const saveImage = {...body, image: req.file.filename}
-    let saveImage;
-  
-    console.log(req.file)
-  
-    if (req.file) {
-      saveImage = {
-        ...body,
-        image : req.file.filename,
-      };
-    } else {
-      saveImage = {...body}
+  if (req.files) {
+    for (let i = 0; i < imgVehicle.length; i++) {
+      dataImg.push(imgVehicle[i].filename);
     }
-  
-    vehicleModel
-      .updateVehicle(saveImage, id)
-      .then(({ status }) => {
-        res.status(status).json({
-          msg: "Data Updated",
-          result: {
-            ...saveImage,
-          },
+    let photos = JSON.stringify(dataImg);
+    newBody = {
+      ...body,
+      images: photos,
+    };
+  } else {
+    newBody = { ...body, id: vehicleId };
+  }
+  vehicleModel
+    .updateVehicle(newBody, vehicleId)
+    .then(({ status }) => {
+      if (status == 404)
+        return responseHelper.success(res, status, {
+          msg: "Vehicle id not found",
         });
-        // responseHelper(res, status, result);
-      })
-      .catch(({ status, err }) => {
-        responseHelper.error(res, status, err);
+      responseHelper.success(res, status, {
+        msg: "Update Data Successfully",
+        result: {
+          ...newBody,
+          vehicleId,
+        },
       });
+    })
+    .catch(({ status, err }) => {
+      console.log(err);
+      responseHelper.error(res, status, err);
+    });
   };
 
 const insertDataVehicles = (req, res) => {
