@@ -71,7 +71,15 @@ const getVehiclesName = (keyword) => {
 
 const getOrder = (query) => {
   return new Promise((resolve, reject) => {
-    let sqlQuery = `SELECT v.name AS "Name", v.type AS "Type", v.city AS "City", v.id FROM vehicles v`;
+    let sqlQuery = `SELECT * FROM vehicles`;
+    // let sqlQuery = `SELECT v.name AS "Name", v.type AS "Type", v.city AS "City", v.id FROM vehicles v`;
+    // const statement = [];
+    // const order = query.order;
+    // let orderBy = "";
+    // if (query.by && query.by.toLowerCase() == "name") orderBy = "v.name";
+    // if (query.by && query.by.toLowerCase() == "type") orderBy = "v.type";
+    // if (query.by && query.by.toLowerCase() == "City") orderBy = "v.city";
+    // if (order && orderBy) {
     const statement = [];
     const order = query.order;
     let orderBy = "";
@@ -79,6 +87,7 @@ const getOrder = (query) => {
     if (query.sort && query.sort.toLowerCase() == "type") orderBy = "v.type";
     if (query.sort && query.sort.toLowerCase() == "City") orderBy = "v.city";
     if (query.sort && query.sort.toLowerCase() == "motorbike") orderBy = "motorbike";
+    if (query.sort && query.sort.toLowerCase() == "car") orderBy = "car";
     if (order && orderBy) {
       sqlQuery += ` ORDER BY ? ?`;
       statement.push(mysql.raw(orderBy), mysql.raw(order));
