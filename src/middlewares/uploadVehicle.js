@@ -3,7 +3,7 @@ const path = require("path");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "pictures");
+    cb(null, "pictures")
   },
   filename: (req, file, cb) => {
     const format = `${file.fieldname}-${Date.now()}${path.extname(
@@ -38,7 +38,7 @@ const multerHandler = (req, res, next) => {
     if (err && err.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({ msg: "File size exceeds the limit" });
     } else if (err) {
-      console.log("ojan " + err);
+      console.log("err img single  " + err);
       return res
         .status(400)
         .json({ msg: "Only .png, .jpg and .jpeg format allowed!" });
@@ -52,7 +52,7 @@ const multiUpload = (req, res, next) => {
     if (err && err.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({ msg: "File size exceeds the limit" });
     } else if (err) {
-      console.log("ojan " + err);
+      console.log("err img multi " + err);
       return res
         .status(400)
         .json({ msg: "Only .png, .jpg and .jpeg format allowed!" });

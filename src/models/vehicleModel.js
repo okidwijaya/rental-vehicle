@@ -75,9 +75,10 @@ const getOrder = (query) => {
     const statement = [];
     const order = query.order;
     let orderBy = "";
-    if (query.by && query.by.toLowerCase() == "name") orderBy = "v.name";
-    if (query.by && query.by.toLowerCase() == "type") orderBy = "v.type";
-    if (query.by && query.by.toLowerCase() == "City") orderBy = "v.city";
+    if (query.sort && query.sort.toLowerCase() == "name") orderBy = "v.name";
+    if (query.sort && query.sort.toLowerCase() == "type") orderBy = "v.type";
+    if (query.sort && query.sort.toLowerCase() == "City") orderBy = "v.city";
+    if (query.sort && query.sort.toLowerCase() == "motorbike") orderBy = "motorbike";
     if (order && orderBy) {
       sqlQuery += ` ORDER BY ? ?`;
       statement.push(mysql.raw(orderBy), mysql.raw(order));
