@@ -9,13 +9,13 @@ const uploadVehicle = require("../middlewares/uploadVehicle");
 
 const vehicleRouter = express.Router();
 
-vehicleRouter.get("/", useController.getVehicles);
+// vehicleRouter.get("/", useController.getVehicles);
+
+vehicleRouter.get("/", useController.getOrder);
 
 vehicleRouter.get("/all", useController.getVehiclesLimit);
 
 vehicleRouter.get("/search", useController.getVehiclesName);
-
-vehicleRouter.get("/byOrder", useController.getOrder);
 
 vehicleRouter.get("/:id", useController.getVehicleById);
 

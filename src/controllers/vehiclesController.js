@@ -90,8 +90,11 @@ const getVehiclesName = (req, res) => {
 
 const getOrder = (req, res) => {
     const { query } = req;
+    let keyword = "%%";
+    if (query.name) keyword = `%${query.name}%`;
+    // const order = query.order;
     vehicleModel
-        .getOrder(query)
+        .getOrder(query, keyword)
         .then(({ status, result }) => {
             responseHelper.success(res, status, result);
         })
