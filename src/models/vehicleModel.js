@@ -109,7 +109,7 @@ const getOrder = (query, keyword) => {
     let types = "";
     if (query.type && query.type.toLowerCase() == "motorbike") types = "motorbike";
     if (query.type && query.type.toLowerCase() == "bike") types = "bike";
-    if (query.type && query.type.toLowerCase() == "cars") types = "cars";
+    if (query.type && query.type.toLowerCase() == "car") types = "car";
     
     console.log('4')
 
