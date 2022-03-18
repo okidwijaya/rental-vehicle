@@ -72,7 +72,7 @@ const getVehiclesName = (keyword) => {
 const getOrder = (query, keyword) => {
   return new Promise((resolve, reject) => {
     // let sqlQuery = `SELECT * FROM vehicles`;
-    let sqlQuery = `SELECT name, type , city, location , id FROM vehicles`;
+    let sqlQuery = `SELECT name, type , city, location , id, images FROM vehicles`;
     let nextPage = '?';
     let prevPage = '?';
     console.log(query)
