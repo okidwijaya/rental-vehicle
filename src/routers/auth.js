@@ -15,4 +15,10 @@ authRouter.post("/signUp", validate.register, authController.newUserRegisters);
 
 authRouter.delete("/logout", authorize.roleTokenAuth, authController.logout);
 
+authRouter.post("/forgot", authController.forgotPassword);
+
+authRouter.post("/cekotp", authController.checkOTP);
+
+authRouter.post("/resetpassword", authController.resetPassword);
+
 module.exports = authRouter;

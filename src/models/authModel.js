@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dbConn = require("../config/db");
+const { sendForgotPass } = require("../helpers/sendForgot");
 
 const createNewUser = (body) => {
   return new Promise((resolve, reject) => {
@@ -13,7 +14,8 @@ const createNewUser = (body) => {
           password: hashedPassword,
         };
         dbConn.query(sqlQuery, [newBody], (err, result) => {
-          if (err) return reject({ status: 500, err: "email exist" });
+          if (err)
+            return reject({ status: 500, err: "Email is already exist" });
           resolve({ status: 201, result });
         });
       })
@@ -72,4 +74,85 @@ const logoutUser = (token) => {
     });
   });
 };
-module.exports = { createNewUser, userLogIn, logoutUser };
+
+const forgotPassword = (body) => {
+  return new Promise((resolve, reject) => {
+    const { email } = body;
+    const sqlQuery = `SELECT * FROM users WHERE email = ?`;
+
+    db.query(sqlQuery, [email], (err, result) => {
+      if (err) return reject({ status: 500, err });
+      if (result.length == 0)
+        return reject({ status: 401, err: "Email is invalid" });
+      // console.log("result", result[0].phone);
+      const name = result[0].display_name;
+      const otp = Math.ceil(Math.random() * 1000000);
+      // console.log("OTP ", otp);
+      sendForgotPass(email, { name: name, otp });
+      const sqlQuery = `UPDATE users SET otp = ? WHERE email = ?`;
+
+      db.query(sqlQuery, [otp, email], (err) => {
+        if (err) return reject({ status: 500, err });
+        const data = {
+          email: email,
+        };
+        resolve({ status: 200, result: data });
+      });
+    });
+  });
+};
+
+const checkOTP = (body) => {
+  return new Promise((resolve, reject) => {
+    const { email, otp } = body;
+    const sqlQuery = `SELECT email, otp FROM users WHERE email = ? AND otp = ?`;
+
+    db.query(sqlQuery, [email, otp], (err, result) => {
+      if (err) return reject({ status: 500, err });
+      if (result.length === 0)
+        return reject({ status: 401, err: "Invalid OTP" });
+      const data = {
+        email: email,
+      };
+      resolve({ status: 200, result: data });
+    });
+  });
+};
+
+const resetPassword = (body) => {
+  return new Promise((resolve, reject) => {
+    const { email, password, otp } = body;
+    const sqlQuery = `SELECT * FROM users WHERE email = ? AND otp = ?`;
+
+    db.query(sqlQuery, [email, otp], (err) => {
+      if (err) return reject({ status: 500, err });
+
+      const sqlUpdatePass = `UPDATE users SET password = ? WHERE email = ? AND otp =?`;
+      bcrypt
+        .hash(password, 10)
+        .then((hashedPassword) => {
+          db.query(sqlUpdatePass, [hashedPassword, email, otp], (err) => {
+            if (err) return reject({ status: 500, err });
+
+            const sqlUpdateOTP = `UPDATE users SET otp = null WHERE email = ?`;
+            db.query(sqlUpdateOTP, [email], (err, result) => {
+              if (err) return reject({ status: 500, err });
+              resolve({ status: 201, result });
+            });
+          });
+        })
+        .catch((err) => {
+          reject({ status: 500, err });
+        });
+    });
+  });
+};
+
+module.exports = {
+  createNewUser,
+  userLogIn,
+  logoutUser,
+  forgotPassword,
+  checkOTP,
+  resetPassword,
+};

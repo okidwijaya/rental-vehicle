@@ -45,4 +45,62 @@ const logout = (req, res) => {
     });
 };
 
-module.exports = { newUserRegisters, signInUser, logout };
+const forgotPassword = (req, res) => {
+  const { body } = req;
+
+  authModel
+    .forgotPassword(body)
+    .then(({ status, result }) => {
+      responseHelper.success(res, status, {
+        msg: "OTP sent successfully",
+        data: result,
+      });
+    })
+    .catch(({ status, err }) => {
+      console.log(err);
+      responseHelper.error(res, status, err);
+    });
+};
+
+const checkOTP = (req, res) => {
+  const { body } = req;
+
+  authModel
+    .checkOTP(body)
+    .then(({ status, result }) => {
+      responseHelper.success(res, status, {
+        msg: "OTP is valid",
+        data: result,
+      });
+    })
+    .catch(({ status, err }) => {
+      console.log(err);
+      responseHelper.error(res, status, err);
+    });
+};
+
+const resetPassword = (req, res) => {
+  const { body } = req;
+
+  authModel
+    .resetPassword(body)
+    .then(({ status }) => {
+      responseHelper.success(res, status, {
+        msg: "Password updated successfully",
+        data: body.email,
+      });
+    })
+    .catch(({ status, err }) => {
+      console.log(err);
+      responseHelper.error(res, status, err);
+    });
+};
+
+module.exports = {
+  newUserRegisters,
+  signInUser,
+  logout,
+  resetPassword,
+  checkOTP,
+  forgotPassword,
+};
