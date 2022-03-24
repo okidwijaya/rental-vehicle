@@ -15,7 +15,10 @@ const createNewUser = (body) => {
         };
         dbConn.query(sqlQuery, [newBody], (err, result) => {
           if (err)
-            return reject({ status: 500, err: "Email is already exist" });
+            return reject({
+              status: 500,
+              err: "Email_aemail_address is already exist",
+            });
           resolve({ status: 201, result });
         });
       })
@@ -34,7 +37,10 @@ const userLogIn = (body) => {
 
       if (err) return reject({ status: 500, err });
       if (result.length == 0)
-        return reject({ status: 401, err: "Wrong Email/Password" });
+        return reject({
+          status: 401,
+          err: "Wrong Email_aemail_address/Password",
+        });
 
       bcrypt.compare(password, result[0].password, function (err) {
         if (err) return reject({ status: 500, err });
@@ -77,24 +83,24 @@ const logoutUser = (token) => {
 
 const forgotPassword = (body) => {
   return new Promise((resolve, reject) => {
-    const { email } = body;
+    const { email_address } = body;
     const sqlQuery = `SELECT * FROM users WHERE email_address = ?`;
 
-    dbConn.query(sqlQuery, [email], (err, result) => {
+    dbConn.query(sqlQuery, [email_address], (err, result) => {
       if (err) return reject({ status: 500, err });
       if (result.length == 0)
-        return reject({ status: 401, err: "Email is invalid" });
+        return reject({ status: 401, err: "Email_aemail_address is invalid" });
       // console.log("result", result[0].phone);
       const name = result[0].display_name;
       const otp = Math.ceil(Math.random() * 1000000);
       // console.log("OTP ", otp);
-      sendForgotPass(email, { name: name, otp });
+      sendForgotPass(email_address, { name: name, otp });
       const sqlQuery = `UPDATE users SET otp = ? WHERE email_address = ?`;
 
-      dbConn.query(sqlQuery, [otp, email], (err) => {
+      dbConn.query(sqlQuery, [otp, email_address], (err) => {
         if (err) return reject({ status: 500, err });
         const data = {
-          email: email,
+          email_address: email_address,
         };
         resolve({ status: 200, result: data });
       });
@@ -104,15 +110,15 @@ const forgotPassword = (body) => {
 
 const checkOTP = (body) => {
   return new Promise((resolve, reject) => {
-    const { email, otp } = body;
+    const { email_address, otp } = body;
     const sqlQuery = `SELECT email_address, otp FROM users WHERE email_address = ? AND otp = ?`;
 
-    dbConn.query(sqlQuery, [email, otp], (err, result) => {
+    dbConn.query(sqlQuery, [email_address, otp], (err, result) => {
       if (err) return reject({ status: 500, err });
       if (result.length === 0)
         return reject({ status: 401, err: "Invalid OTP" });
       const data = {
-        email: email,
+        email_address: email_address,
       };
       resolve({ status: 200, result: data });
     });
@@ -121,25 +127,29 @@ const checkOTP = (body) => {
 
 const resetPassword = (body) => {
   return new Promise((resolve, reject) => {
-    const { email, password, otp } = body;
+    const { email_address, password, otp } = body;
     const sqlQuery = `SELECT * FROM users WHERE email_address = ? AND otp = ?`;
 
-    dbConn.query(sqlQuery, [email, otp], (err) => {
+    dbConn.query(sqlQuery, [email_address, otp], (err) => {
       if (err) return reject({ status: 500, err });
 
       const sqlUpdatePass = `UPDATE users SET password = ? WHERE email_address = ? AND otp =?`;
       bcrypt
         .hash(password, 10)
         .then((hashedPassword) => {
-          dbConn.query(sqlUpdatePass, [hashedPassword, email, otp], (err) => {
-            if (err) return reject({ status: 500, err });
-
-            const sqlUpdateOTP = `UPDATE users SET otp = null WHERE email_address = ?`;
-            dbConn.query(sqlUpdateOTP, [email], (err, result) => {
+          dbConn.query(
+            sqlUpdatePass,
+            [hashedPassword, email_address, otp],
+            (err) => {
               if (err) return reject({ status: 500, err });
-              resolve({ status: 201, result });
-            });
-          });
+
+              const sqlUpdateOTP = `UPDATE users SET otp = null WHERE email_address = ?`;
+              dbConn.query(sqlUpdateOTP, [email_address], (err, result) => {
+                if (err) return reject({ status: 500, err });
+                resolve({ status: 201, result });
+              });
+            }
+          );
         })
         .catch((err) => {
           reject({ status: 500, err });
