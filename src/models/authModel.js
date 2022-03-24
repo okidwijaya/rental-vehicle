@@ -78,7 +78,7 @@ const logoutUser = (token) => {
 const forgotPassword = (body) => {
   return new Promise((resolve, reject) => {
     const { email } = body;
-    const sqlQuery = `SELECT * FROM users WHERE email = ?`;
+    const sqlQuery = `SELECT * FROM users WHERE email_address = ?`;
 
     db.query(sqlQuery, [email], (err, result) => {
       if (err) return reject({ status: 500, err });
@@ -89,7 +89,7 @@ const forgotPassword = (body) => {
       const otp = Math.ceil(Math.random() * 1000000);
       // console.log("OTP ", otp);
       sendForgotPass(email, { name: name, otp });
-      const sqlQuery = `UPDATE users SET otp = ? WHERE email = ?`;
+      const sqlQuery = `UPDATE users SET otp = ? WHERE email_address = ?`;
 
       db.query(sqlQuery, [otp, email], (err) => {
         if (err) return reject({ status: 500, err });
@@ -105,7 +105,7 @@ const forgotPassword = (body) => {
 const checkOTP = (body) => {
   return new Promise((resolve, reject) => {
     const { email, otp } = body;
-    const sqlQuery = `SELECT email, otp FROM users WHERE email = ? AND otp = ?`;
+    const sqlQuery = `SELECT email_address, otp FROM users WHERE email_address = ? AND otp = ?`;
 
     db.query(sqlQuery, [email, otp], (err, result) => {
       if (err) return reject({ status: 500, err });
@@ -122,19 +122,19 @@ const checkOTP = (body) => {
 const resetPassword = (body) => {
   return new Promise((resolve, reject) => {
     const { email, password, otp } = body;
-    const sqlQuery = `SELECT * FROM users WHERE email = ? AND otp = ?`;
+    const sqlQuery = `SELECT * FROM users WHERE email_address = ? AND otp = ?`;
 
     db.query(sqlQuery, [email, otp], (err) => {
       if (err) return reject({ status: 500, err });
 
-      const sqlUpdatePass = `UPDATE users SET password = ? WHERE email = ? AND otp =?`;
+      const sqlUpdatePass = `UPDATE users SET password = ? WHERE email_address = ? AND otp =?`;
       bcrypt
         .hash(password, 10)
         .then((hashedPassword) => {
           db.query(sqlUpdatePass, [hashedPassword, email, otp], (err) => {
             if (err) return reject({ status: 500, err });
 
-            const sqlUpdateOTP = `UPDATE users SET otp = null WHERE email = ?`;
+            const sqlUpdateOTP = `UPDATE users SET otp = null WHERE email_address = ?`;
             db.query(sqlUpdateOTP, [email], (err, result) => {
               if (err) return reject({ status: 500, err });
               resolve({ status: 201, result });
