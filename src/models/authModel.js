@@ -80,7 +80,7 @@ const forgotPassword = (body) => {
     const { email } = body;
     const sqlQuery = `SELECT * FROM users WHERE email_address = ?`;
 
-    db.query(sqlQuery, [email], (err, result) => {
+    dbConn.query(sqlQuery, [email], (err, result) => {
       if (err) return reject({ status: 500, err });
       if (result.length == 0)
         return reject({ status: 401, err: "Email is invalid" });
@@ -91,7 +91,7 @@ const forgotPassword = (body) => {
       sendForgotPass(email, { name: name, otp });
       const sqlQuery = `UPDATE users SET otp = ? WHERE email_address = ?`;
 
-      db.query(sqlQuery, [otp, email], (err) => {
+      dbConn.query(sqlQuery, [otp, email], (err) => {
         if (err) return reject({ status: 500, err });
         const data = {
           email: email,
@@ -107,7 +107,7 @@ const checkOTP = (body) => {
     const { email, otp } = body;
     const sqlQuery = `SELECT email_address, otp FROM users WHERE email_address = ? AND otp = ?`;
 
-    db.query(sqlQuery, [email, otp], (err, result) => {
+    dbConn.query(sqlQuery, [email, otp], (err, result) => {
       if (err) return reject({ status: 500, err });
       if (result.length === 0)
         return reject({ status: 401, err: "Invalid OTP" });
@@ -124,18 +124,18 @@ const resetPassword = (body) => {
     const { email, password, otp } = body;
     const sqlQuery = `SELECT * FROM users WHERE email_address = ? AND otp = ?`;
 
-    db.query(sqlQuery, [email, otp], (err) => {
+    dbConn.query(sqlQuery, [email, otp], (err) => {
       if (err) return reject({ status: 500, err });
 
       const sqlUpdatePass = `UPDATE users SET password = ? WHERE email_address = ? AND otp =?`;
       bcrypt
         .hash(password, 10)
         .then((hashedPassword) => {
-          db.query(sqlUpdatePass, [hashedPassword, email, otp], (err) => {
+          dbConn.query(sqlUpdatePass, [hashedPassword, email, otp], (err) => {
             if (err) return reject({ status: 500, err });
 
             const sqlUpdateOTP = `UPDATE users SET otp = null WHERE email_address = ?`;
-            db.query(sqlUpdateOTP, [email], (err, result) => {
+            dbConn.query(sqlUpdateOTP, [email], (err, result) => {
               if (err) return reject({ status: 500, err });
               resolve({ status: 201, result });
             });
