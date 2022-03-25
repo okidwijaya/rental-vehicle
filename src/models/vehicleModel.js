@@ -74,7 +74,7 @@ const getOrder = (query) => {
     let sqlQuery = ` FROM vehicles `;
     // let sqlQuery = `SELECT name, type , city, location , id, images FROM vehicles`;
     const sqlcount = ` SELECT COUNT(*) AS count`;
-    const sqlresult = ` SELECT id, name, type, brand, price, capacity, detail, qty, city, status, images, location, description`;
+    const sqlresult = ` SELECT id, name, type, brand, price, capacity, qty, city, status, images, location, description`;
 
     console.log(query);
     let nextPage = "?";
