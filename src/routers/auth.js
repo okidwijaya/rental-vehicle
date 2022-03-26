@@ -9,9 +9,9 @@ const validate = require("../middlewares/validate");
 const authorize = require("../middlewares/authorize");
 
 // auth/signIn
-authRouter.post("/signIn", authController.signInUser);
+authRouter.post("/login", validate.login, authController.loginUser);
 
-authRouter.post("/signUp", validate.register, authController.newUserRegisters);
+authRouter.post("/register", validate.register, authController.registerUser);
 
 authRouter.delete("/logout", authorize.roleTokenAuth, authController.logout);
 

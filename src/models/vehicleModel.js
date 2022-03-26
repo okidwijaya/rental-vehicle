@@ -12,30 +12,6 @@ const getVehicles = () => {
   });
 };
 
-const getVehiclesLimit = () => {
-  return new Promise((resolve, reject) => {
-    const sqlQuery = "SELECT * FROM vehicles ORDER BY id ASC LIMIT 4"; //DESC
-    dbConn.query(sqlQuery, (err, result) => {
-      if (err) return reject({ status: 500, err });
-      if (result.length == 0) return resolve({ status: 404, result });
-      resolve({ status: 200, result });
-    });
-  });
-};
-
-const postNewVehicles = (body) => {
-  return new Promise((resolve, reject) => {
-    const sqlQuery = `INSERT INTO vehicles SET ?`;
-    dbConn.query(sqlQuery, body, (err, result) => {
-      if (err) return reject({ status: 500, err });
-      resolve({
-        status: 201,
-        result,
-      });
-    });
-  });
-};
-
 const getVehicleById = (vehicleId) => {
   return new Promise((resolve, reject) => {
     const sqlQuery = `SELECT * FROM vehicles WHERE id = ${vehicleId}`;
@@ -69,10 +45,9 @@ const getVehiclesName = (keyword) => {
   });
 };
 
-const getOrder = (query) => {
+const getSortBy = (query) => {
   return new Promise((resolve, reject) => {
     let sqlQuery = ` FROM vehicles `;
-    // let sqlQuery = `SELECT name, type , city, location , id, images FROM vehicles`;
     const sqlcount = ` SELECT COUNT(*) AS count`;
     const sqlresult = ` SELECT id, name, type, brand, price, capacity, qty, city, status, images, location, description`;
 
@@ -106,8 +81,6 @@ const getOrder = (query) => {
     } else {
       orderBy = "name";
     }
-    // const statement = [];
-    // const order = query.order;
     console.log("3");
 
     let types = "";
@@ -133,7 +106,6 @@ const getOrder = (query) => {
       locations = "bali";
 
     console.log("4.1");
-    // console.log(keyword);
     if (query.name) {
       const search = "%" + query.name + "%";
       sqlQuery += ` WHERE name LIKE ?`;
@@ -162,7 +134,6 @@ const getOrder = (query) => {
       prevPage += "type=" + query.types;
     }
 
-    // const countQu = `SELECT COUNT(*) AS "count" FROM vehicles`;
     const counta = sqlcount + sqlQuery;
     dbConn.query(counta, statement, (err, result) => {
       console.log("5");
@@ -175,11 +146,9 @@ const getOrder = (query) => {
       console.log("a " + page);
       const limit = parseInt(query.limit || "5");
       const count = result[0].count;
-      // if (query.page && query.limit) {
       sqlQuery += " LIMIT ? OFFSET ?";
       const offset = (page - 1) * limit;
       statement.push(limit, offset);
-      // }
 
       console.log("5");
 
@@ -191,8 +160,6 @@ const getOrder = (query) => {
       };
       console.log(statement);
       console.log("6");
-
-      // console.)
 
       const resSlct = sqlresult + sqlQuery;
 
@@ -227,7 +194,7 @@ const updateVehicle = (saveImage, id) => {
   });
 };
 
-const insertDataVehicles = (newBody) => {
+const postVehicle = (newBody) => {
   return new Promise((resolve, reject) => {
     const sqlQuery = `INSERT INTO vehicles SET ?`;
 
@@ -251,12 +218,10 @@ const insertDataVehicles = (newBody) => {
 
 module.exports = {
   getVehicles,
-  postNewVehicles,
   getVehicleById,
   deleteVehicle,
   getVehiclesName,
-  getOrder,
+  getSortBy,
   updateVehicle,
-  getVehiclesLimit,
-  insertDataVehicles,
-}; //, getVehiclesLimit
+  postVehicle,
+};

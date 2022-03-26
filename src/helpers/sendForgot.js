@@ -29,7 +29,7 @@ exports.sendForgotPass = (email, data) => {
                             border: 1px solid #393939;
                             width: 90%;
                             margin-left: 5%;
-                    
+                            backgound-color: 'white';
                     }
                     h2 {
                         text-align: center;
@@ -65,7 +65,9 @@ exports.sendForgotPass = (email, data) => {
             </head>
             <body>
                 <div class="wrapper">
-                    <h2>Hi ${data.name !== null ? data.name + "," : ""}</h2>
+                    <h2>Hi ${
+                      data.name !== null ? data.name + "," : data.email + ","
+                    }</h2>
                     <p class="text">    We already have your request to reset your account password.
                     Please enter this code <u class="code">${
                       data.otp

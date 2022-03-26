@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const dbConn = require("../config/db");
 const { sendForgotPass } = require("../helpers/sendForgot");
 
-const createNewUser = (body) => {
+const registerUser = (body) => {
   return new Promise((resolve, reject) => {
     const sqlQuery = "INSERT INTO users SET ?";
     bcrypt
@@ -17,7 +17,7 @@ const createNewUser = (body) => {
           if (err)
             return reject({
               status: 500,
-              err: "Email_aemail_address is already exist",
+              err: "Email address is already exist",
             });
           resolve({ status: 201, result });
         });
@@ -28,44 +28,52 @@ const createNewUser = (body) => {
   });
 };
 
-const userLogIn = (body) => {
+const loginUser = (body) => {
   return new Promise((resolve, reject) => {
-    const { email_address, password, name } = body;
-    const sqlQuery = `SELECT * FROM users WHERE ?`; //AND ?
-    dbConn.query(sqlQuery, { email_address }, (err, result) => {
-      //, { password }]
+    const { email, password } = body;
+    const sqlQuery = "SELECT * FROM users WHERE ?";
 
+    dbConn.query(sqlQuery, [{ email }], async (err, result) => {
       if (err) return reject({ status: 500, err });
+      // untuk cek apakah emailnya ada di db
       if (result.length == 0)
         return reject({
           status: 401,
-          err: "Wrong Email_aemail_address/Password",
+          err: "Invalid Email/Password",
         });
 
-      bcrypt.compare(password, result[0].password, function (err) {
-        if (err) return reject({ status: 500, err });
-        const payload = {
-          id: result[0].id,
-          name: result[0].name,
-          email_address: result[0].email_address,
-          role: result[0].role,
-          picture: result[0].picture,
-        };
-        const jwtOptions = {
-          expiresIn: "10h",
-          issuer: process.env.ISSUER,
-        };
-        jwt.sign(payload, process.env.SECRET_KEY, jwtOptions, (err, token) => {
-          if (err) return reject({ status: 500, err });
-          resolve({
-            status: 200,
-            result: {
-              token,
-              payload,
-            },
-          });
-        });
-      });
+      try {
+        const hashedPassword = result[0].password;
+        const checkPassword = await bcrypt.compare(password, hashedPassword);
+        if (checkPassword) {
+          const payload = {
+            id: result[0].id,
+            role: result[0].role,
+          };
+          const jwtOptions = {
+            expiresIn: "1h",
+            issuer: process.env.ISSUER,
+          };
+          jwt.sign(
+            payload,
+            process.env.SECRET_KEY,
+            jwtOptions,
+            (err, token) => {
+              if (err) return reject({ status: 500, err });
+              const data = {
+                token,
+                role: payload.role,
+                id: payload.id,
+              };
+              resolve({ status: 200, result: data });
+            }
+          );
+        } else {
+          reject({ status: 401, err: "Invalid Email/Password" });
+        }
+      } catch (err) {
+        reject({ status: 500, err });
+      }
     });
   });
 };
@@ -83,24 +91,24 @@ const logoutUser = (token) => {
 
 const forgotPassword = (body) => {
   return new Promise((resolve, reject) => {
-    const { email_address } = body;
-    const sqlQuery = `SELECT * FROM users WHERE email_address = ?`;
+    const { email } = body;
+    const sqlQuery = `SELECT * FROM users WHERE email = ?`;
 
-    dbConn.query(sqlQuery, [email_address], (err, result) => {
+    dbConn.query(sqlQuery, [email], (err, result) => {
       if (err) return reject({ status: 500, err });
       if (result.length == 0)
-        return reject({ status: 401, err: "Email_aemail_address is invalid" });
+        return reject({ status: 401, err: "Email is invalid" });
       // console.log("result", result[0].phone);
       const name = result[0].display_name;
       const otp = Math.ceil(Math.random() * 1000000);
       // console.log("OTP ", otp);
-      sendForgotPass(email_address, { name: name, otp });
-      const sqlQuery = `UPDATE users SET otp = ? WHERE email_address = ?`;
+      sendForgotPass(email, { name: name, otp, email: email });
+      const sqlQuery = `UPDATE users SET otp = ? WHERE email = ?`;
 
-      dbConn.query(sqlQuery, [otp, email_address], (err) => {
+      dbConn.query(sqlQuery, [otp, email], (err) => {
         if (err) return reject({ status: 500, err });
         const data = {
-          email_address: email_address,
+          email: email,
         };
         resolve({ status: 200, result: data });
       });
@@ -110,15 +118,15 @@ const forgotPassword = (body) => {
 
 const checkOTP = (body) => {
   return new Promise((resolve, reject) => {
-    const { email_address, otp } = body;
-    const sqlQuery = `SELECT email_address, otp FROM users WHERE email_address = ? AND otp = ?`;
+    const { email, otp } = body;
+    const sqlQuery = `SELECT email, otp FROM users WHERE email = ? AND otp = ?`;
 
-    dbConn.query(sqlQuery, [email_address, otp], (err, result) => {
+    dbConn.query(sqlQuery, [email, otp], (err, result) => {
       if (err) return reject({ status: 500, err });
       if (result.length === 0)
         return reject({ status: 401, err: "Invalid OTP" });
       const data = {
-        email_address: email_address,
+        email: email,
       };
       resolve({ status: 200, result: data });
     });
@@ -127,29 +135,25 @@ const checkOTP = (body) => {
 
 const resetPassword = (body) => {
   return new Promise((resolve, reject) => {
-    const { email_address, password, otp } = body;
-    const sqlQuery = `SELECT * FROM users WHERE email_address = ? AND otp = ?`;
+    const { email, password, otp } = body;
+    const sqlQuery = `SELECT * FROM users WHERE email = ? AND otp = ?`;
 
-    dbConn.query(sqlQuery, [email_address, otp], (err) => {
+    dbConn.query(sqlQuery, [email, otp], (err) => {
       if (err) return reject({ status: 500, err });
 
-      const sqlUpdatePass = `UPDATE users SET password = ? WHERE email_address = ? AND otp =?`;
+      const sqlUpdatePass = `UPDATE users SET password = ? WHERE email = ? AND otp =?`;
       bcrypt
         .hash(password, 10)
         .then((hashedPassword) => {
-          dbConn.query(
-            sqlUpdatePass,
-            [hashedPassword, email_address, otp],
-            (err) => {
-              if (err) return reject({ status: 500, err });
+          dbConn.query(sqlUpdatePass, [hashedPassword, email, otp], (err) => {
+            if (err) return reject({ status: 500, err });
 
-              const sqlUpdateOTP = `UPDATE users SET otp = null WHERE email_address = ?`;
-              dbConn.query(sqlUpdateOTP, [email_address], (err, result) => {
-                if (err) return reject({ status: 500, err });
-                resolve({ status: 201, result });
-              });
-            }
-          );
+            const sqlUpdateOTP = `UPDATE users SET otp = null WHERE email = ?`;
+            dbConn.query(sqlUpdateOTP, [email], (err, result) => {
+              if (err) return reject({ status: 500, err });
+              resolve({ status: 201, result });
+            });
+          });
         })
         .catch((err) => {
           reject({ status: 500, err });
@@ -159,8 +163,8 @@ const resetPassword = (body) => {
 };
 
 module.exports = {
-  createNewUser,
-  userLogIn,
+  registerUser,
+  loginUser,
   logoutUser,
   forgotPassword,
   checkOTP,

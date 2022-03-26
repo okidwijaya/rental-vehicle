@@ -1,22 +1,23 @@
-const express = require('express');
+const express = require("express");
 
-const useController = require('../controllers/paymentHistoryController');
+const useController = require("../controllers/paymentHistoryController");
+const authorize = require("../middlewares/authorize");
 
 const historyRouter = express.Router();
 
-historyRouter.get('/', useController.getAllPaymentHistory)
+// historyRouter.get('/', useController.getAllPaymentHistory)
 
-historyRouter.get('/desc', useController.getPaymentHistory); //Rating
+historyRouter.get("/desc", useController.getPaymentHistory); //Rating
 
-historyRouter.get('/:id', useController.getHistoryById);
+historyRouter.get("/", authorize.roleTokenAuth, useController.getHistoryById);
 
-historyRouter.get('/search', useController.getHistoryuser);
+historyRouter.get("/search", useController.getHistoryuser);
 
-historyRouter.post('/', useController.postNewHistory);
+historyRouter.post("/", useController.postNewHistory);
 
-historyRouter.delete('/:id', useController.deleteHistory);
+historyRouter.delete("/:id", useController.deleteHistory);
 
-historyRouter.patch('/', useController.updatePaymentHistory);
+historyRouter.patch("/", useController.updatePaymentHistory);
 
 module.exports = historyRouter;
 
