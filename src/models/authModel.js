@@ -63,7 +63,7 @@ const loginUser = (body) => {
               const data = {
                 token,
                 role: payload.role,
-                id: payload.id,
+                // id: payload.id,
               };
               resolve({ status: 200, result: data });
             }
