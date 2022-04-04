@@ -1,5 +1,5 @@
-# arka-rental-vehicle
-This is server side of vehicle rental project, this project provide reactjs and react native project.
+# Rental-Vehicle BackEnd
+This is server side project of vehicle rental project, this project buil for provide [reactjs](https://github.com/okidwijaya/rental-deploy) and [react native](https://github.com/okidwijaya/vehicel-rental-native) project.
 
 [![express](https://img.shields.io/npm/v/react-router-dom?label=express)](https://www.npmjs.com/package/express)
 [![bcrypt](https://img.shields.io/badge/bcrypt-5.0.1-blue)](https://www.npmjs.com/package/bcrypt)
